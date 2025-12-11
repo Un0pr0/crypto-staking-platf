@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CryptoHolding, DepositPosition, Transaction, Cryptocurrency } from '@/lib/types'
 import { CRYPTO_INFO, DEPOSIT_APYS, formatCryptoAmount, calculateDepositInterest } from '@/lib/crypto-utils'
 import { toast } from 'sonner'
@@ -19,13 +18,20 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
   const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('USDT')
-  const [term, setTerm] = useState<30 | 60 | 90>(30)
+  const [term, setTerm] = useState<number>(30)
   const [amount, setAmount] = useState('')
   const [loading, setLoading] = useState(false)
   
   const availableHoldings = (holdings || []).filter(h => h.amount > 0)
   const currentHolding = availableHoldings.find(h => h.symbol === selectedCrypto)
-  const apy = DEPOSIT_APYS[term][selectedCrypto]
+  
+  const getApyForTerm = (days: number): number => {
+    if (days <= 30) return DEPOSIT_APYS[30][selectedCrypto]
+    if (days <= 60) return DEPOSIT_APYS[60][selectedCrypto]
+    return DEPOSIT_APYS[90][selectedCrypto]
+  }
+  
+  const apy = getApyForTerm(term)
   const interest = amount ? calculateDepositInterest(parseFloat(amount), apy, term) : 0
   
   const handleCreate = async () => {
@@ -147,14 +153,69 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Term</label>
-            <Tabs value={term.toString()} onValueChange={(v) => setTerm(parseInt(v) as 30 | 60 | 90)}>
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="30">30 days</TabsTrigger>
-                <TabsTrigger value="60">60 days</TabsTrigger>
-                <TabsTrigger value="90">90 days</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <label className="text-sm font-medium">Term (Days)</label>
+            <Input
+              type="number"
+              min="1"
+              max="365"
+              value={term}
+              onChange={(e) => {
+                const val = parseInt(e.target.value)
+                if (val >= 1 && val <= 365) {
+                  setTerm(val)
+                } else if (e.target.value === '') {
+                  setTerm(30)
+                }
+              }}
+              placeholder="Enter days (1-365)"
+            />
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setTerm(30)}
+                className="text-xs"
+              >
+                30 days
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setTerm(60)}
+                className="text-xs"
+              >
+                60 days
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setTerm(90)}
+                className="text-xs"
+              >
+                90 days
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setTerm(180)}
+                className="text-xs"
+              >
+                180 days
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setTerm(365)}
+                className="text-xs"
+              >
+                365 days
+              </Button>
+            </div>
             <div className="text-sm text-center p-3 bg-muted rounded-lg">
               <span className="text-muted-foreground">APY: </span>
               <span className="font-semibold text-success">{apy}%</span>

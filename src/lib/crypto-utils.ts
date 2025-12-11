@@ -103,7 +103,7 @@ export function calculateStakingRewards(
 export function calculateDepositInterest(
   amount: number,
   apy: number,
-  term: 30 | 60 | 90
+  term: number
 ): number {
   return (amount * (apy / 100) * term) / 365
 }

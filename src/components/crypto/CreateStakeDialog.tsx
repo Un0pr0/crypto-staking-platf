@@ -165,23 +165,60 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Duration</label>
-            <Select value={duration.toString()} onValueChange={(v) => setDuration(parseInt(v))}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="30">30 days (1 month)</SelectItem>
-                <SelectItem value="60">60 days (2 months)</SelectItem>
-                <SelectItem value="90">90 days (3 months)</SelectItem>
-                <SelectItem value="92">92 days</SelectItem>
-                <SelectItem value="153">153 days (5 months)</SelectItem>
-                <SelectItem value="176">176 days (6 months)</SelectItem>
-                <SelectItem value="180">180 days (6 months)</SelectItem>
-                <SelectItem value="207">207 days (7 months)</SelectItem>
-                <SelectItem value="365">365 days (1 year)</SelectItem>
-              </SelectContent>
-            </Select>
+            <label className="text-sm font-medium">Duration (Days)</label>
+            <Input
+              type="number"
+              min="1"
+              max="365"
+              value={duration}
+              onChange={(e) => {
+                const val = parseInt(e.target.value)
+                if (val >= 1 && val <= 365) {
+                  setDuration(val)
+                } else if (e.target.value === '') {
+                  setDuration(30)
+                }
+              }}
+              placeholder="Enter days (1-365)"
+            />
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setDuration(30)}
+                className="text-xs"
+              >
+                30 days
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setDuration(90)}
+                className="text-xs"
+              >
+                90 days
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setDuration(180)}
+                className="text-xs"
+              >
+                180 days
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setDuration(365)}
+                className="text-xs"
+              >
+                365 days
+              </Button>
+            </div>
           </div>
           
           <div className="space-y-2">

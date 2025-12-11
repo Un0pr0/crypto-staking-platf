@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -11,60 +11,11 @@ import { CreateDepositDialog } from './CreateDepositDialog'
 import { DepositDetailDialog } from './DepositDetailDialog'
 
 export function DepositsView() {
-  const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
+  const [deposits] = useKV<DepositPosition[]>('deposits', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
-  const [initialized, setInitialized] = useKV<boolean>('deposits-initialized', false)
-  
-  useEffect(() => {
-    const initDeposits = async () => {
-      if (!initialized) {
-        const depositData = [
-          {
-            startDate: new Date('2025-05-02').getTime(),
-            endDate: new Date('2025-12-12').getTime(),
-            amount: 3760,
-            interest: 574,
-          },
-          {
-            startDate: new Date('2025-07-25').getTime(),
-            endDate: new Date('2026-01-10').getTime(),
-            amount: 5035,
-            interest: 730,
-          },
-          {
-            startDate: new Date('2025-08-20').getTime(),
-            endDate: new Date('2026-01-20').getTime(),
-            amount: 1285,
-            interest: 179,
-          },
-        ]
-        
-        const initialDeposits: DepositPosition[] = depositData.map((data, index) => {
-          const termDays = Math.floor((data.endDate - data.startDate) / (1000 * 60 * 60 * 24))
-          const apy = (data.interest / data.amount) * (365 / termDays) * 100
-          
-          return {
-            id: `initial-deposit-${index + 1}`,
-            currency: 'USDT',
-            amount: data.amount,
-            apy,
-            startDate: data.startDate,
-            term: termDays,
-            maturityDate: data.endDate,
-            interest: data.interest,
-          }
-        })
-        
-        setDeposits(initialDeposits)
-        await setInitialized(true)
-      }
-    }
-    
-    initDeposits()
-  }, [initialized, setDeposits, setInitialized])
   
   const activeDeposits = (deposits || []).filter(d => Date.now() < d.maturityDate)
   const maturedDeposits = (deposits || []).filter(d => Date.now() >= d.maturityDate)
