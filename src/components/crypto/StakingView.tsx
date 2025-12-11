@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,8 +10,31 @@ import { CRYPTO_INFO, formatCryptoAmount, formatUSD, calculateStakingRewards } f
 import { CreateStakeDialog } from './CreateStakeDialog'
 
 export function StakingView() {
-  const [stakes] = useKV<StakePosition[]>('stakes', [])
+  const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
   const [createOpen, setCreateOpen] = useState(false)
+  const [initialized, setInitialized] = useState(false)
+  
+  useEffect(() => {
+    if (!initialized && stakes?.length === 0) {
+      const startDate = new Date('2025-06-18').getTime()
+      const endDate = new Date('2025-12-11').getTime()
+      const durationDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24))
+      
+      const initialStake: StakePosition = {
+        id: 'initial-stake-1',
+        currency: 'ETH',
+        amount: 1652,
+        apy: 5.2,
+        startDate,
+        endDate,
+        rewards: 149,
+        durationDays,
+      }
+      
+      setStakes([initialStake])
+      setInitialized(true)
+    }
+  }, [stakes, initialized, setStakes])
   
   const activeStakes = stakes || []
   
