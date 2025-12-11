@@ -21,7 +21,7 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
   const handleCopy = () => {
     navigator.clipboard.writeText(address)
     setCopied(true)
-    toast.success('Адрес скопирован')
+    toast.success('Address copied')
     setTimeout(() => setCopied(false), 2000)
   }
   
@@ -29,12 +29,12 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Получить криптовалюту</DialogTitle>
+          <DialogTitle>Receive Cryptocurrency</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Криптовалюта</label>
+            <label className="text-sm font-medium">Cryptocurrency</label>
             <Select value={selectedCrypto} onValueChange={(v) => setSelectedCrypto(v as Cryptocurrency)}>
               <SelectTrigger>
                 <SelectValue />
@@ -58,7 +58,7 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Адрес кошелька</label>
+            <label className="text-sm font-medium">Wallet Address</label>
             <div className="bg-muted p-4 rounded-lg break-all font-mono text-sm">
               {address}
             </div>
@@ -66,11 +66,11 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
           
           <Button onClick={handleCopy} className="w-full gap-2">
             {copied ? <Check /> : <Copy />}
-            {copied ? 'Скопировано!' : 'Скопировать адрес'}
+            {copied ? 'Copied!' : 'Copy Address'}
           </Button>
           
           <p className="text-xs text-muted-foreground text-center">
-            Это демо-адрес. Не отправляйте реальные средства.
+            This is a demo address. Do not send real funds.
           </p>
         </div>
       </DialogContent>

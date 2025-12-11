@@ -32,18 +32,18 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
   
   const handleSwap = async () => {
     if (!amount || !fromHolding) {
-      toast.error('Введите сумму')
+      toast.error('Enter amount')
       return
     }
     
     const swapAmount = parseFloat(amount)
     if (swapAmount <= 0 || swapAmount > fromHolding.amount) {
-      toast.error('Неверная сумма')
+      toast.error('Invalid amount')
       return
     }
     
     if (fromCrypto === toCrypto) {
-      toast.error('Выберите разные валюты')
+      toast.error('Select different currencies')
       return
     }
     
@@ -63,7 +63,7 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
       
       setTransactions((current) => [newTransaction, ...(current || [])])
       
-      toast.success(`Обменяно ${formatCryptoAmount(swapAmount)} ${fromCrypto} на ${formatCryptoAmount(parseFloat(toAmount))} ${toCrypto}`)
+      toast.success(`Swapped ${formatCryptoAmount(swapAmount)} ${fromCrypto} for ${formatCryptoAmount(parseFloat(toAmount))} ${toCrypto}`)
       setLoading(false)
       setAmount('')
       onOpenChange(false)
@@ -80,19 +80,19 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Обменять криптовалюту</DialogTitle>
+          <DialogTitle>Swap Cryptocurrency</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Отдаете</label>
+            <label className="text-sm font-medium">From</label>
             <Select value={fromCrypto} onValueChange={(v) => setFromCrypto(v as Cryptocurrency)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {availableHoldings.length === 0 ? (
-                  <div className="p-2 text-sm text-muted-foreground">Нет активов</div>
+                  <div className="p-2 text-sm text-muted-foreground">No assets</div>
                 ) : (
                   availableHoldings.map((holding) => {
                     const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
@@ -122,7 +122,7 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
             />
             {fromHolding && (
               <div className="text-xs text-muted-foreground">
-                Доступно: {formatCryptoAmount(fromHolding.amount)} {fromCrypto}
+                Available: {formatCryptoAmount(fromHolding.amount)} {fromCrypto}
               </div>
             )}
           </div>
@@ -139,7 +139,7 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Получаете</label>
+            <label className="text-sm font-medium">To</label>
             <Select value={toCrypto} onValueChange={(v) => setToCrypto(v as Cryptocurrency)}>
               <SelectTrigger>
                 <SelectValue />
@@ -166,7 +166,7 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
               </div>
             </div>
             <div className="text-xs text-muted-foreground">
-              Курс: 1 {fromCrypto} = {formatCryptoAmount(exchangeRate, 6)} {toCrypto}
+              Rate: 1 {fromCrypto} = {formatCryptoAmount(exchangeRate, 6)} {toCrypto}
             </div>
           </div>
           
@@ -175,7 +175,7 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
             disabled={loading || !fromHolding || availableHoldings.length === 0}
             className="w-full"
           >
-            {loading ? 'Обмен...' : 'Обменять'}
+            {loading ? 'Swapping...' : 'Swap'}
           </Button>
         </div>
       </DialogContent>

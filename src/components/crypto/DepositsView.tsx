@@ -41,17 +41,17 @@ export function DepositsView() {
             </div>
             <div>
               <div className="font-semibold">{info.name}</div>
-              <div className="text-sm text-muted-foreground">{deposit.term} дней</div>
+              <div className="text-sm text-muted-foreground">{deposit.term} days</div>
             </div>
           </div>
           <Badge variant={isMatured ? 'default' : 'secondary'}>
-            {isMatured ? 'Завершен' : 'Активен'}
+            {isMatured ? 'Matured' : 'Active'}
           </Badge>
         </div>
         
         <div className="space-y-3">
           <div className="flex justify-between items-baseline">
-            <span className="text-sm text-muted-foreground">Депозит</span>
+            <span className="text-sm text-muted-foreground">Deposit</span>
             <div className="text-right">
               <div className="font-semibold">{formatCryptoAmount(deposit.amount)} {deposit.currency}</div>
               <div className="text-xs text-muted-foreground">
@@ -61,10 +61,10 @@ export function DepositsView() {
           </div>
           
           <div className="flex justify-between items-baseline">
-            <span className="text-sm text-muted-foreground">Процент</span>
+            <span className="text-sm text-muted-foreground">Interest</span>
             <div className="text-right">
               <div className="font-semibold text-success">{formatCryptoAmount(deposit.interest)} {deposit.currency}</div>
-              <div className="text-xs text-muted-foreground">{deposit.apy}% годовых</div>
+              <div className="text-xs text-muted-foreground">{deposit.apy}% APY</div>
             </div>
           </div>
           
@@ -72,7 +72,7 @@ export function DepositsView() {
             <>
               <Progress value={progress} className="h-2" />
               <div className="text-xs text-muted-foreground text-center">
-                {daysRemaining} {daysRemaining === 1 ? 'день' : daysRemaining < 5 ? 'дня' : 'дней'} до созревания
+                {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'} until maturity
               </div>
             </>
           )}
@@ -80,7 +80,7 @@ export function DepositsView() {
           {isMatured && (
             <Button variant="outline" className="w-full gap-2">
               <LockKey />
-              Вывести с процентами
+              Withdraw with interest
             </Button>
           )}
         </div>
@@ -93,22 +93,22 @@ export function DepositsView() {
       <Card className="p-6 bg-gradient-to-br from-card to-secondary">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <div className="text-sm text-muted-foreground mb-1">Всего в депозитах</div>
+            <div className="text-sm text-muted-foreground mb-1">Total in Deposits</div>
             <div className="text-3xl font-bold">{formatUSD(totalDeposited)}</div>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="gap-2">
             <Plus />
-            Создать депозит
+            Create Deposit
           </Button>
         </div>
         
         <div className="grid grid-cols-2 gap-4 mt-6">
           <div>
-            <div className="text-xs text-muted-foreground">Активных депозитов</div>
+            <div className="text-xs text-muted-foreground">Active Deposits</div>
             <div className="text-xl font-semibold">{activeDeposits.length}</div>
           </div>
           <div>
-            <div className="text-xs text-muted-foreground">Доход по процентам</div>
+            <div className="text-xs text-muted-foreground">Interest Earned</div>
             <div className="text-xl font-semibold text-success">${totalInterest.toFixed(2)}</div>
           </div>
         </div>
@@ -117,20 +117,20 @@ export function DepositsView() {
       {activeDeposits.length === 0 && maturedDeposits.length === 0 ? (
         <Card className="p-12 text-center">
           <LockKey className="mx-auto mb-4 opacity-20" size={64} />
-          <h3 className="text-xl font-semibold mb-2">Нет активных депозитов</h3>
+          <h3 className="text-xl font-semibold mb-2">No Active Deposits</h3>
           <p className="text-muted-foreground mb-4">
-            Создайте депозит, чтобы заработать процент на ваши активы
+            Create a deposit to earn interest on your assets
           </p>
           <Button onClick={() => setCreateOpen(true)} className="gap-2">
             <Plus />
-            Создать первый депозит
+            Create First Deposit
           </Button>
         </Card>
       ) : (
         <>
           {activeDeposits.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Активные депозиты</h2>
+              <h2 className="text-xl font-semibold mb-4">Active Deposits</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 {activeDeposits.map(renderDeposit)}
               </div>
@@ -139,7 +139,7 @@ export function DepositsView() {
           
           {maturedDeposits.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Завершенные депозиты</h2>
+              <h2 className="text-xl font-semibold mb-4">Matured Deposits</h2>
               <div className="grid gap-4 md:grid-cols-2">
                 {maturedDeposits.map(renderDeposit)}
               </div>

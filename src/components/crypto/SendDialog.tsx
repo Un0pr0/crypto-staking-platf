@@ -26,13 +26,13 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
   
   const handleSend = async () => {
     if (!amount || !address || !currentHolding) {
-      toast.error('Заполните все поля')
+      toast.error('Please fill all fields')
       return
     }
     
     const sendAmount = parseFloat(amount)
     if (sendAmount <= 0 || sendAmount > currentHolding.amount) {
-      toast.error('Неверная сумма')
+      toast.error('Invalid amount')
       return
     }
     
@@ -51,7 +51,7 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
       
       setTransactions((current) => [newTransaction, ...(current || [])])
       
-      toast.success(`Отправлено ${formatCryptoAmount(sendAmount)} ${selectedCrypto}`)
+      toast.success(`Sent ${formatCryptoAmount(sendAmount)} ${selectedCrypto}`)
       setLoading(false)
       setAmount('')
       setAddress('')
@@ -63,19 +63,19 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Отправить криптовалюту</DialogTitle>
+          <DialogTitle>Send Cryptocurrency</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Криптовалюта</label>
+            <label className="text-sm font-medium">Cryptocurrency</label>
             <Select value={selectedCrypto} onValueChange={(v) => setSelectedCrypto(v as Cryptocurrency)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {availableHoldings.length === 0 ? (
-                  <div className="p-2 text-sm text-muted-foreground">Нет активов</div>
+                  <div className="p-2 text-sm text-muted-foreground">No assets</div>
                 ) : (
                   availableHoldings.map((holding) => {
                     const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
@@ -101,15 +101,15 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
             </Select>
             {currentHolding && (
               <div className="text-xs text-muted-foreground">
-                Доступно: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
+                Available: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
               </div>
             )}
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Адрес получателя</label>
+            <label className="text-sm font-medium">Recipient Address</label>
             <Input
-              placeholder="Введите адрес"
+              placeholder="Enter address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className="font-mono text-sm"
@@ -117,7 +117,7 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Сумма</label>
+            <label className="text-sm font-medium">Amount</label>
             <Input
               type="number"
               placeholder="0.00"
@@ -137,7 +137,7 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
             disabled={loading || !currentHolding || availableHoldings.length === 0}
             className="w-full"
           >
-            {loading ? 'Отправка...' : 'Отправить'}
+            {loading ? 'Sending...' : 'Send'}
           </Button>
         </div>
       </DialogContent>

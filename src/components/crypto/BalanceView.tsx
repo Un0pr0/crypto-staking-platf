@@ -22,7 +22,7 @@ export function BalanceView() {
   return (
     <div className="space-y-6">
       <Card className="p-8 balance-gradient border-primary/20">
-        <div className="text-sm text-muted-foreground mb-2">Общий баланс</div>
+        <div className="text-sm text-muted-foreground mb-2">Total Balance</div>
         <div className="text-5xl font-bold mb-8 tracking-tight">
           {formatUSD(totalBalance)}
         </div>
@@ -34,7 +34,7 @@ export function BalanceView() {
             className="gap-2"
           >
             <ArrowDown />
-            Получить
+            Receive
           </Button>
           <Button 
             onClick={() => setSendOpen(true)}
@@ -42,7 +42,7 @@ export function BalanceView() {
             className="gap-2"
           >
             <ArrowUp />
-            Отправить
+            Send
           </Button>
           <Button 
             onClick={() => setSwapOpen(true)}
@@ -50,20 +50,20 @@ export function BalanceView() {
             className="gap-2"
           >
             <ArrowsLeftRight />
-            Обменять
+            Swap
           </Button>
         </div>
       </Card>
 
       <div>
-        <h2 className="text-2xl font-semibold mb-4">Активы</h2>
+        <h2 className="text-2xl font-semibold mb-4">Assets</h2>
         {!holdings || holdings.length === 0 ? (
           <Card className="p-8 text-center">
             <p className="text-muted-foreground mb-4">
-              У вас пока нет активов
+              You don't have any assets yet
             </p>
             <p className="text-sm text-muted-foreground">
-              Используйте "Получить" чтобы пополнить баланс (демо)
+              Use "Receive" to add balance (demo)
             </p>
           </Card>
         ) : (

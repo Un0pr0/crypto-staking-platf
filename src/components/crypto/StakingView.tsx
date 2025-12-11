@@ -46,12 +46,12 @@ export function StakingView() {
               <div className="text-sm text-muted-foreground">{stake.apy}% APY</div>
             </div>
           </div>
-          <Badge variant="secondary">Активен</Badge>
+          <Badge variant="secondary">Active</Badge>
         </div>
         
         <div className="space-y-3">
           <div className="flex justify-between items-baseline">
-            <span className="text-sm text-muted-foreground">В стейкинге</span>
+            <span className="text-sm text-muted-foreground">Staked</span>
             <div className="text-right">
               <div className="font-semibold">{formatCryptoAmount(stake.amount)} {stake.currency}</div>
               <div className="text-xs text-muted-foreground">
@@ -61,7 +61,7 @@ export function StakingView() {
           </div>
           
           <div className="flex justify-between items-baseline">
-            <span className="text-sm text-muted-foreground">Награды</span>
+            <span className="text-sm text-muted-foreground">Rewards</span>
             <div className="text-right">
               <div className="font-semibold text-success">
                 +{formatCryptoAmount(currentRewards)} {stake.currency}
@@ -74,10 +74,10 @@ export function StakingView() {
           
           <div className="pt-2 border-t border-border">
             <div className="text-xs text-muted-foreground mb-2">
-              В стейкинге: {daysStaked} {daysStaked === 1 ? 'день' : daysStaked < 5 ? 'дня' : 'дней'}
+              Staking for: {daysStaked} {daysStaked === 1 ? 'day' : 'days'}
             </div>
             <Button variant="outline" size="sm" className="w-full">
-              Вывести из стейкинга
+              Unstake
             </Button>
           </div>
         </div>
@@ -90,22 +90,22 @@ export function StakingView() {
       <Card className="p-6 bg-gradient-to-br from-card to-secondary">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <div className="text-sm text-muted-foreground mb-1">Всего в стейкинге</div>
+            <div className="text-sm text-muted-foreground mb-1">Total Staked</div>
             <div className="text-3xl font-bold">{formatUSD(totalStaked)}</div>
           </div>
           <Button onClick={() => setCreateOpen(true)} className="gap-2">
             <Plus />
-            Начать стейкинг
+            Start Staking
           </Button>
         </div>
         
         <div className="grid grid-cols-2 gap-4 mt-6">
           <div>
-            <div className="text-xs text-muted-foreground">Активных позиций</div>
+            <div className="text-xs text-muted-foreground">Active Positions</div>
             <div className="text-xl font-semibold">{activeStakes.length}</div>
           </div>
           <div>
-            <div className="text-xs text-muted-foreground">Заработано наград</div>
+            <div className="text-xs text-muted-foreground">Rewards Earned</div>
             <div className="text-xl font-semibold text-success">{formatUSD(totalRewards)}</div>
           </div>
         </div>
@@ -114,18 +114,18 @@ export function StakingView() {
       {activeStakes.length === 0 ? (
         <Card className="p-12 text-center">
           <ChartLineUp className="mx-auto mb-4 opacity-20" size={64} />
-          <h3 className="text-xl font-semibold mb-2">Нет активного стейкинга</h3>
+          <h3 className="text-xl font-semibold mb-2">No Active Staking</h3>
           <p className="text-muted-foreground mb-4">
-            Начните зарабатывать награды на ваши криптоактивы
+            Start earning rewards on your crypto assets
           </p>
           <Button onClick={() => setCreateOpen(true)} className="gap-2">
             <Plus />
-            Начать первый стейкинг
+            Start First Stake
           </Button>
         </Card>
       ) : (
         <div>
-          <h2 className="text-xl font-semibold mb-4">Активный стейкинг</h2>
+          <h2 className="text-xl font-semibold mb-4">Active Staking</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {activeStakes.map(renderStake)}
           </div>

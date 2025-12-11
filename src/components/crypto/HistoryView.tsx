@@ -32,19 +32,19 @@ export function HistoryView() {
   const getTransactionLabel = (type: Transaction['type']) => {
     switch (type) {
       case 'send':
-        return 'Отправлено'
+        return 'Sent'
       case 'receive':
-        return 'Получено'
+        return 'Received'
       case 'swap':
-        return 'Обмен'
+        return 'Swap'
       case 'deposit':
-        return 'Депозит'
+        return 'Deposit'
       case 'stake':
-        return 'Стейкинг'
+        return 'Staking'
       case 'unstake':
-        return 'Вывод из стейкинга'
+        return 'Unstake'
       case 'withdraw':
-        return 'Вывод депозита'
+        return 'Withdraw'
     }
   }
   
@@ -55,11 +55,11 @@ export function HistoryView() {
     yesterday.setDate(yesterday.getDate() - 1)
     
     if (date.toDateString() === today.toDateString()) {
-      return `Сегодня в ${date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`
+      return `Today at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`
     } else if (date.toDateString() === yesterday.toDateString()) {
-      return `Вчера в ${date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`
+      return `Yesterday at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`
     } else {
-      return date.toLocaleDateString('ru-RU', { 
+      return date.toLocaleDateString('en-US', { 
         day: 'numeric', 
         month: 'short',
         hour: '2-digit',
@@ -83,7 +83,7 @@ export function HistoryView() {
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold">{getTransactionLabel(tx.type)}</span>
               <Badge variant={tx.status === 'completed' ? 'default' : 'secondary'} className="text-xs">
-                {tx.status === 'completed' ? 'Завершено' : tx.status === 'pending' ? 'В обработке' : 'Ошибка'}
+                {tx.status === 'completed' ? 'Completed' : tx.status === 'pending' ? 'Pending' : 'Failed'}
               </Badge>
             </div>
             <div className="text-sm text-muted-foreground">
@@ -115,9 +115,9 @@ export function HistoryView() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">История транзакций</h2>
+          <h2 className="text-2xl font-semibold">Transaction History</h2>
           <p className="text-sm text-muted-foreground">
-            Все операции с вашими активами
+            All operations with your assets
           </p>
         </div>
       </div>
@@ -125,9 +125,9 @@ export function HistoryView() {
       {sortedTransactions.length === 0 ? (
         <Card className="p-12 text-center">
           <ClockCounterClockwise className="mx-auto mb-4 opacity-20" size={64} />
-          <h3 className="text-xl font-semibold mb-2">Нет транзакций</h3>
+          <h3 className="text-xl font-semibold mb-2">No Transactions</h3>
           <p className="text-muted-foreground">
-            История транзакций будет отображаться здесь
+            Your transaction history will appear here
           </p>
         </Card>
       ) : (

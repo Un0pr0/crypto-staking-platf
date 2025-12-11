@@ -30,13 +30,13 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
   
   const handleCreate = async () => {
     if (!amount || !currentHolding) {
-      toast.error('Введите сумму')
+      toast.error('Enter amount')
       return
     }
     
     const depositAmount = parseFloat(amount)
     if (depositAmount <= 0 || depositAmount > currentHolding.amount) {
-      toast.error('Неверная сумма')
+      toast.error('Invalid amount')
       return
     }
     
@@ -69,7 +69,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
       setDeposits((current) => [...(current || []), newDeposit])
       setTransactions((current) => [newTransaction, ...(current || [])])
       
-      toast.success(`Депозит создан: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
+      toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
       setLoading(false)
       setAmount('')
       onOpenChange(false)
@@ -80,19 +80,19 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Создать депозит</DialogTitle>
+          <DialogTitle>Create Deposit</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Криптовалюта</label>
+            <label className="text-sm font-medium">Cryptocurrency</label>
             <Select value={selectedCrypto} onValueChange={(v) => setSelectedCrypto(v as Cryptocurrency)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {availableHoldings.length === 0 ? (
-                  <div className="p-2 text-sm text-muted-foreground">Нет активов</div>
+                  <div className="p-2 text-sm text-muted-foreground">No assets</div>
                 ) : (
                   availableHoldings.map((holding) => {
                     const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
@@ -115,18 +115,18 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
             </Select>
             {currentHolding && (
               <div className="text-xs text-muted-foreground">
-                Доступно: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
+                Available: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
               </div>
             )}
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Срок депозита</label>
+            <label className="text-sm font-medium">Term</label>
             <Tabs value={term.toString()} onValueChange={(v) => setTerm(parseInt(v) as 30 | 60 | 90)}>
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="30">30 дней</TabsTrigger>
-                <TabsTrigger value="60">60 дней</TabsTrigger>
-                <TabsTrigger value="90">90 дней</TabsTrigger>
+                <TabsTrigger value="30">30 days</TabsTrigger>
+                <TabsTrigger value="60">60 days</TabsTrigger>
+                <TabsTrigger value="90">90 days</TabsTrigger>
               </TabsList>
             </Tabs>
             <div className="text-sm text-center p-3 bg-muted rounded-lg">
@@ -136,7 +136,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Сумма</label>
+            <label className="text-sm font-medium">Amount</label>
             <Input
               type="number"
               placeholder="0.00"
@@ -147,7 +147,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
             {amount && interest > 0 && (
               <div className="text-sm p-3 bg-success/10 border border-success/20 rounded-lg">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Доход через {term} дней:</span>
+                  <span className="text-muted-foreground">Earnings in {term} days:</span>
                   <span className="font-semibold text-success">
                     +{formatCryptoAmount(interest)} {selectedCrypto}
                   </span>
@@ -161,7 +161,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
             disabled={loading || !currentHolding || availableHoldings.length === 0}
             className="w-full"
           >
-            {loading ? 'Создание...' : 'Создать депозит'}
+            {loading ? 'Creating...' : 'Create Deposit'}
           </Button>
         </div>
       </DialogContent>

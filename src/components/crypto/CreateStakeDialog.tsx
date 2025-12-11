@@ -27,18 +27,18 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
   
   const handleCreate = async () => {
     if (!amount || !currentHolding) {
-      toast.error('Введите сумму')
+      toast.error('Enter amount')
       return
     }
     
     const stakeAmount = parseFloat(amount)
     if (stakeAmount <= 0 || stakeAmount > currentHolding.amount) {
-      toast.error('Неверная сумма')
+      toast.error('Invalid amount')
       return
     }
     
     if (apy === 0) {
-      toast.error('Стейкинг недоступен для этой валюты')
+      toast.error('Staking not available for this currency')
       return
     }
     
@@ -68,7 +68,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
       setStakes((current) => [...(current || []), newStake])
       setTransactions((current) => [newTransaction, ...(current || [])])
       
-      toast.success(`Стейкинг начат: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
+      toast.success(`Staking started: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
       setLoading(false)
       setAmount('')
       onOpenChange(false)
@@ -79,12 +79,12 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Начать стейкинг</DialogTitle>
+          <DialogTitle>Start Staking</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Криптовалюта</label>
+            <label className="text-sm font-medium">Cryptocurrency</label>
             <Select value={selectedCrypto} onValueChange={(v) => setSelectedCrypto(v as Cryptocurrency)}>
               <SelectTrigger>
                 <SelectValue />
@@ -92,7 +92,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
               <SelectContent>
                 {availableHoldings.length === 0 ? (
                   <div className="p-2 text-sm text-muted-foreground">
-                    Нет активов для стейкинга
+                    No assets available for staking
                   </div>
                 ) : (
                   availableHoldings.map((holding) => {
@@ -120,20 +120,20 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
             </Select>
             {currentHolding && (
               <div className="text-xs text-muted-foreground">
-                Доступно: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
+                Available: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
               </div>
             )}
           </div>
           
           <div className="p-4 bg-muted rounded-lg">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Годовая доходность</span>
+              <span className="text-sm text-muted-foreground">Annual Percentage Yield</span>
               <span className="text-xl font-bold text-success">{apy}%</span>
             </div>
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">Сумма</label>
+            <label className="text-sm font-medium">Amount</label>
             <Input
               type="number"
               placeholder="0.00"
@@ -143,7 +143,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
             />
             {amount && parseFloat(amount) > 0 && (
               <div className="text-sm p-3 bg-success/10 border border-success/20 rounded-lg">
-                <div className="text-muted-foreground text-xs mb-1">Примерный доход в год:</div>
+                <div className="text-muted-foreground text-xs mb-1">Estimated yearly earnings:</div>
                 <div className="font-semibold text-success">
                   +{formatCryptoAmount(parseFloat(amount) * (apy / 100))} {selectedCrypto}
                 </div>
@@ -156,11 +156,11 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
             disabled={loading || !currentHolding || availableHoldings.length === 0}
             className="w-full"
           >
-            {loading ? 'Создание...' : 'Начать стейкинг'}
+            {loading ? 'Creating...' : 'Start Staking'}
           </Button>
           
           <p className="text-xs text-muted-foreground text-center">
-            Вы можете вывести средства из стейкинга в любое время
+            You can unstake your funds at any time
           </p>
         </div>
       </DialogContent>

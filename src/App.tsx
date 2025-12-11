@@ -26,19 +26,19 @@ function App() {
           <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
             <TabsTrigger value="balance" className="gap-2">
               <Wallet className="hidden sm:block" />
-              <span>Баланс</span>
+              <span>Balance</span>
             </TabsTrigger>
             <TabsTrigger value="deposits" className="gap-2">
               <LockKey className="hidden sm:block" />
-              <span>Депозиты</span>
+              <span>Deposits</span>
             </TabsTrigger>
             <TabsTrigger value="staking" className="gap-2">
               <ChartLineUp className="hidden sm:block" />
-              <span>Стейкинг</span>
+              <span>Staking</span>
             </TabsTrigger>
             <TabsTrigger value="history" className="gap-2">
               <ClockCounterClockwise className="hidden sm:block" />
-              <span>История</span>
+              <span>History</span>
             </TabsTrigger>
           </TabsList>
 
