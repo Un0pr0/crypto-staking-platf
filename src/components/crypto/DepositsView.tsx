@@ -8,10 +8,13 @@ import { Plus, LockKey } from '@phosphor-icons/react'
 import { DepositPosition } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 import { CreateDepositDialog } from './CreateDepositDialog'
+import { DepositDetailDialog } from './DepositDetailDialog'
 
 export function DepositsView() {
   const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
   const [createOpen, setCreateOpen] = useState(false)
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
   const [initialized, setInitialized] = useKV<boolean>('deposits-initialized', false)
   
   useEffect(() => {
@@ -67,6 +70,11 @@ export function DepositsView() {
   
   const totalInterest = activeDeposits.reduce((sum, deposit) => deposit.interest + sum, 0)
   
+  const handleDepositClick = (deposit: DepositPosition) => {
+    setSelectedDeposit(deposit)
+    setDetailOpen(true)
+  }
+  
   const renderDeposit = (deposit: DepositPosition) => {
     const info = CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO]
     const now = Date.now()
@@ -75,7 +83,11 @@ export function DepositsView() {
     const daysRemaining = Math.ceil((deposit.maturityDate - now) / (1000 * 60 * 60 * 24))
     
     return (
-      <Card key={deposit.id} className="p-6">
+      <Card 
+        key={deposit.id} 
+        className="p-6 cursor-pointer hover:bg-accent/50 transition-colors"
+        onClick={() => handleDepositClick(deposit)}
+      >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div 
@@ -109,7 +121,7 @@ export function DepositsView() {
             <span className="text-sm text-muted-foreground">Interest</span>
             <div className="text-right">
               <div className="font-semibold text-success">{formatCryptoAmount(deposit.interest)} {deposit.currency}</div>
-              <div className="text-xs text-muted-foreground">{deposit.apy}% APY</div>
+              <div className="text-xs text-muted-foreground">{deposit.apy.toFixed(2)}% APY</div>
             </div>
           </div>
           
@@ -123,7 +135,13 @@ export function DepositsView() {
           )}
           
           {isMatured && (
-            <Button variant="outline" className="w-full gap-2">
+            <Button 
+              variant="outline" 
+              className="w-full gap-2"
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+            >
               <LockKey />
               Withdraw with interest
             </Button>
@@ -194,6 +212,11 @@ export function DepositsView() {
       )}
       
       <CreateDepositDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <DepositDetailDialog 
+        deposit={selectedDeposit} 
+        open={detailOpen} 
+        onOpenChange={setDetailOpen} 
+      />
     </div>
   )
 }
