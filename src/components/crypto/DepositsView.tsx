@@ -4,14 +4,15 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Plus, LockKey } from '@phosphor-icons/react'
-import { DepositPosition } from '@/lib/types'
+import { Plus, LockKey, Wallet } from '@phosphor-icons/react'
+import { DepositPosition, CryptoHolding } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 import { CreateDepositDialog } from './CreateDepositDialog'
 import { DepositDetailDialog } from './DepositDetailDialog'
 
 export function DepositsView() {
   const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
+  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
@@ -63,6 +64,9 @@ export function DepositsView() {
   
   const activeDeposits = (deposits || []).filter(d => Date.now() < d.maturityDate)
   const maturedDeposits = (deposits || []).filter(d => Date.now() >= d.maturityDate)
+  
+  const usdtHolding = (holdings || []).find(h => h.symbol === 'USDT')
+  const availableUSDT = usdtHolding?.amount || 0
   
   const totalDeposited = activeDeposits.reduce((sum, deposit) => {
     return sum + deposit.amount * CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO].priceUSD
@@ -165,7 +169,7 @@ export function DepositsView() {
           </Button>
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mt-6">
+        <div className="grid grid-cols-3 gap-4 mt-6">
           <div>
             <div className="text-xs text-muted-foreground">Active Deposits</div>
             <div className="text-xl font-semibold">{activeDeposits.length}</div>
@@ -173,6 +177,13 @@ export function DepositsView() {
           <div>
             <div className="text-xs text-muted-foreground">Interest Earned</div>
             <div className="text-xl font-semibold text-success">${totalInterest.toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground flex items-center gap-1">
+              <Wallet size={14} />
+              Available USDT
+            </div>
+            <div className="text-xl font-semibold text-accent">{formatCryptoAmount(availableUSDT)}</div>
           </div>
         </div>
       </Card>

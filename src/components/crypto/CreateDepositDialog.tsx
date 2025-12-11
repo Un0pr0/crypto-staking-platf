@@ -15,10 +15,10 @@ interface CreateDepositDialogProps {
 }
 
 export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogProps) {
-  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
+  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
   const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
-  const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('BTC')
+  const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('USDT')
   const [term, setTerm] = useState<30 | 60 | 90>(30)
   const [amount, setAmount] = useState('')
   const [loading, setLoading] = useState(false)
@@ -66,7 +66,23 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
         status: 'completed',
       }
       
-      setDeposits((current) => [...(current || []), newDeposit])
+      setHoldings((currentHoldings) => {
+        return (currentHoldings || []).map(holding => {
+          if (holding.symbol === selectedCrypto) {
+            return {
+              ...holding,
+              amount: holding.amount - depositAmount
+            }
+          }
+          return holding
+        })
+      })
+      
+      setDeposits((current) => {
+        const activeDeposits = (current || []).filter(d => Date.now() < d.maturityDate)
+        return [...activeDeposits, newDeposit]
+      })
+      
       setTransactions((current) => [newTransaction, ...(current || [])])
       
       toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
@@ -137,13 +153,26 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
           
           <div className="space-y-2">
             <label className="text-sm font-medium">Amount</label>
-            <Input
-              type="number"
-              placeholder="0.00"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              step="any"
-            />
+            <div className="relative">
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                step="any"
+              />
+              {currentHolding && currentHolding.amount > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-2 text-xs font-semibold"
+                  onClick={() => setAmount(currentHolding.amount.toString())}
+                >
+                  Max
+                </Button>
+              )}
+            </div>
             {amount && interest > 0 && (
               <div className="text-sm p-3 bg-success/10 border border-success/20 rounded-lg">
                 <div className="flex justify-between">
