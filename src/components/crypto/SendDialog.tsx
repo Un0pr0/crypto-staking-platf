@@ -1,0 +1,146 @@
+import { useState } from 'react'
+import { useKV } from '@github/spark/hooks'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { CryptoHolding, Transaction, Cryptocurrency } from '@/lib/types'
+import { CRYPTO_INFO, formatCryptoAmount } from '@/lib/crypto-utils'
+import { toast } from 'sonner'
+
+interface SendDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function SendDialog({ open, onOpenChange }: SendDialogProps) {
+  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
+  const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
+  const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('BTC')
+  const [amount, setAmount] = useState('')
+  const [address, setAddress] = useState('')
+  const [loading, setLoading] = useState(false)
+  
+  const availableHoldings = (holdings || []).filter(h => h.amount > 0)
+  const currentHolding = availableHoldings.find(h => h.symbol === selectedCrypto)
+  
+  const handleSend = async () => {
+    if (!amount || !address || !currentHolding) {
+      toast.error('Заполните все поля')
+      return
+    }
+    
+    const sendAmount = parseFloat(amount)
+    if (sendAmount <= 0 || sendAmount > currentHolding.amount) {
+      toast.error('Неверная сумма')
+      return
+    }
+    
+    setLoading(true)
+    
+    setTimeout(() => {
+      const newTransaction: Transaction = {
+        id: Date.now().toString(),
+        type: 'send',
+        timestamp: Date.now(),
+        amount: sendAmount,
+        currency: selectedCrypto,
+        address,
+        status: 'completed',
+      }
+      
+      setTransactions((current) => [newTransaction, ...(current || [])])
+      
+      toast.success(`Отправлено ${formatCryptoAmount(sendAmount)} ${selectedCrypto}`)
+      setLoading(false)
+      setAmount('')
+      setAddress('')
+      onOpenChange(false)
+    }, 1000)
+  }
+  
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Отправить криптовалюту</DialogTitle>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Криптовалюта</label>
+            <Select value={selectedCrypto} onValueChange={(v) => setSelectedCrypto(v as Cryptocurrency)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {availableHoldings.length === 0 ? (
+                  <div className="p-2 text-sm text-muted-foreground">Нет активов</div>
+                ) : (
+                  availableHoldings.map((holding) => {
+                    const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
+                    return (
+                      <SelectItem key={holding.symbol} value={holding.symbol}>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                            style={{ backgroundColor: info.color }}
+                          >
+                            {info.symbol}
+                          </div>
+                          <span>{info.name}</span>
+                          <span className="text-muted-foreground ml-auto">
+                            {formatCryptoAmount(holding.amount)}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    )
+                  })
+                )}
+              </SelectContent>
+            </Select>
+            {currentHolding && (
+              <div className="text-xs text-muted-foreground">
+                Доступно: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
+              </div>
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Адрес получателя</label>
+            <Input
+              placeholder="Введите адрес"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="font-mono text-sm"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Сумма</label>
+            <Input
+              type="number"
+              placeholder="0.00"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              step="any"
+            />
+            {currentHolding && amount && (
+              <div className="text-xs text-muted-foreground">
+                ≈ ${(parseFloat(amount) * CRYPTO_INFO[selectedCrypto].priceUSD).toFixed(2)}
+              </div>
+            )}
+          </div>
+          
+          <Button 
+            onClick={handleSend} 
+            disabled={loading || !currentHolding || availableHoldings.length === 0}
+            className="w-full"
+          >
+            {loading ? 'Отправка...' : 'Отправить'}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}

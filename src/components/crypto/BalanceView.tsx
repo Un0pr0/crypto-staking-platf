@@ -1,0 +1,110 @@
+import { useKV } from '@github/spark/hooks'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { ArrowUp, ArrowDown, ArrowsLeftRight } from '@phosphor-icons/react'
+import { CryptoHolding } from '@/lib/types'
+import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
+import { SendDialog } from './SendDialog'
+import { ReceiveDialog } from './ReceiveDialog'
+import { SwapDialog } from './SwapDialog'
+import { useState } from 'react'
+
+export function BalanceView() {
+  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
+  const [sendOpen, setSendOpen] = useState(false)
+  const [receiveOpen, setReceiveOpen] = useState(false)
+  const [swapOpen, setSwapOpen] = useState(false)
+
+  const totalBalance = (holdings || []).reduce((sum, holding) => {
+    return sum + holding.amount * CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO].priceUSD
+  }, 0)
+
+  return (
+    <div className="space-y-6">
+      <Card className="p-8 balance-gradient border-primary/20">
+        <div className="text-sm text-muted-foreground mb-2">Общий баланс</div>
+        <div className="text-5xl font-bold mb-8 tracking-tight">
+          {formatUSD(totalBalance)}
+        </div>
+        
+        <div className="flex gap-3 flex-wrap">
+          <Button 
+            onClick={() => setReceiveOpen(true)} 
+            variant="default"
+            className="gap-2"
+          >
+            <ArrowDown />
+            Получить
+          </Button>
+          <Button 
+            onClick={() => setSendOpen(true)}
+            variant="secondary"
+            className="gap-2"
+          >
+            <ArrowUp />
+            Отправить
+          </Button>
+          <Button 
+            onClick={() => setSwapOpen(true)}
+            variant="secondary"
+            className="gap-2"
+          >
+            <ArrowsLeftRight />
+            Обменять
+          </Button>
+        </div>
+      </Card>
+
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">Активы</h2>
+        {!holdings || holdings.length === 0 ? (
+          <Card className="p-8 text-center">
+            <p className="text-muted-foreground mb-4">
+              У вас пока нет активов
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Используйте "Получить" чтобы пополнить баланс (демо)
+            </p>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {holdings.map((holding) => {
+              const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
+              const value = holding.amount * info.priceUSD
+              
+              return (
+                <Card key={holding.symbol} className="p-6 hover:border-primary/40 transition-colors">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div 
+                      className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
+                      style={{ backgroundColor: info.color }}
+                    >
+                      {info.symbol}
+                    </div>
+                    <div>
+                      <div className="font-semibold">{info.name}</div>
+                      <div className="text-sm text-muted-foreground">{holding.symbol}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <div className="text-2xl font-bold">
+                      {formatCryptoAmount(holding.amount)}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {formatUSD(value)}
+                    </div>
+                  </div>
+                </Card>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      <SendDialog open={sendOpen} onOpenChange={setSendOpen} />
+      <ReceiveDialog open={receiveOpen} onOpenChange={setReceiveOpen} />
+      <SwapDialog open={swapOpen} onOpenChange={setSwapOpen} />
+    </div>
+  )
+}
