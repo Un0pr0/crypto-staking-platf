@@ -25,7 +25,7 @@ export function StakingView() {
         },
         {
           startDate: new Date('2025-08-02').getTime(),
-          endDate: new Date('2025-02-25').getTime(),
+          endDate: new Date('2026-02-25').getTime(),
           amount: 2565,
           rewards: 379,
         },
