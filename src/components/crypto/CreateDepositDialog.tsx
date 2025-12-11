@@ -66,7 +66,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
         status: 'completed',
       }
       
-      await setHoldings((currentHoldings) => {
+      setHoldings((currentHoldings) => {
         return (currentHoldings || []).map(holding => {
           if (holding.symbol === selectedCrypto) {
             return {
@@ -78,14 +78,16 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
         })
       })
       
-      await setDeposits((current) => {
+      setDeposits((current) => {
         const updatedDeposits = [...(current || []), newDeposit]
         console.log('New deposit added:', newDeposit)
         console.log('Total deposits:', updatedDeposits.length)
         return updatedDeposits
       })
       
-      await setTransactions((current) => [newTransaction, ...(current || [])])
+      setTransactions((current) => [newTransaction, ...(current || [])])
+      
+      await new Promise(resolve => setTimeout(resolve, 100))
       
       toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
       

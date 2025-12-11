@@ -62,7 +62,7 @@ export function StakingView() {
         })
         
         setStakes(initialStakes)
-        setInitialized(true)
+        await setInitialized(true)
       }
     }
     

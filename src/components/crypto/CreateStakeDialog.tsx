@@ -71,7 +71,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
         status: 'completed',
       }
       
-      await setHoldings((currentHoldings) => {
+      setHoldings((currentHoldings) => {
         return (currentHoldings || []).map(holding => {
           if (holding.symbol === selectedCrypto) {
             return {
@@ -83,14 +83,16 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
         })
       })
       
-      await setStakes((current) => {
+      setStakes((current) => {
         const updatedStakes = [...(current || []), newStake]
         console.log('New stake added:', newStake)
         console.log('Total stakes:', updatedStakes.length)
         return updatedStakes
       })
       
-      await setTransactions((current) => [newTransaction, ...(current || [])])
+      setTransactions((current) => [newTransaction, ...(current || [])])
+      
+      await new Promise(resolve => setTimeout(resolve, 100))
       
       toast.success(`Staking started: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
       

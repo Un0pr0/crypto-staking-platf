@@ -59,7 +59,7 @@ export function DepositsView() {
         })
         
         setDeposits(initialDeposits)
-        setInitialized(true)
+        await setInitialized(true)
       }
     }
     

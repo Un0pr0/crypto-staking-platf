@@ -2,7 +2,7 @@ import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowUp, ArrowDown, ArrowsLeftRight } from '@phosphor-icons/react'
-import { CryptoHolding } from '@/lib/types'
+import { CryptoHolding, StakePosition, DepositPosition } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 import { SendDialog } from './SendDialog'
 import { ReceiveDialog } from './ReceiveDialog'
@@ -11,6 +11,8 @@ import { useState, useEffect } from 'react'
 
 export function BalanceView() {
   const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
+  const [stakes] = useKV<StakePosition[]>('stakes', [])
+  const [deposits] = useKV<DepositPosition[]>('deposits', [])
   const [sendOpen, setSendOpen] = useState(false)
   const [receiveOpen, setReceiveOpen] = useState(false)
   const [swapOpen, setSwapOpen] = useState(false)
@@ -33,9 +35,19 @@ export function BalanceView() {
     initHoldings()
   }, [initialized, setHoldings, setInitialized])
 
-  const totalBalance = (holdings || []).reduce((sum, holding) => {
+  const holdingsBalance = (holdings || []).reduce((sum, holding) => {
     return sum + holding.amount * CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO].priceUSD
   }, 0)
+
+  const stakingBalance = (stakes || []).reduce((sum, stake) => {
+    return sum + stake.amount * CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO].priceUSD
+  }, 0)
+
+  const depositsBalance = (deposits || []).reduce((sum, deposit) => {
+    return sum + deposit.amount * CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO].priceUSD
+  }, 0)
+
+  const totalBalance = holdingsBalance + stakingBalance + depositsBalance
 
   return (
     <div className="space-y-6">
