@@ -7,13 +7,19 @@ import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 import { SendDialog } from './SendDialog'
 import { ReceiveDialog } from './ReceiveDialog'
 import { SwapDialog } from './SwapDialog'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function BalanceView() {
-  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
+  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
   const [sendOpen, setSendOpen] = useState(false)
   const [receiveOpen, setReceiveOpen] = useState(false)
   const [swapOpen, setSwapOpen] = useState(false)
+
+  useEffect(() => {
+    setHoldings([
+      { symbol: 'USDT', name: 'Tether', amount: 1801, priceUSD: 1 }
+    ])
+  }, [])
 
   const totalBalance = (holdings || []).reduce((sum, holding) => {
     return sum + holding.amount * CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO].priceUSD
