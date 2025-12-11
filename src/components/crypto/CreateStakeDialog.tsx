@@ -14,12 +14,12 @@ interface CreateStakeDialogProps {
 }
 
 export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps) {
-  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
+  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
   const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
-  const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('ETH')
+  const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('USDT')
   const [amount, setAmount] = useState('')
-  const [duration, setDuration] = useState<number>(30)
+  const [duration, setDuration] = useState<number>(180)
   const [loading, setLoading] = useState(false)
   
   const availableHoldings = (holdings || []).filter(h => h.amount > 0 && STAKING_APYS[h.symbol as Cryptocurrency] > 0)
@@ -49,6 +49,8 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
       const now = Date.now()
       const endDate = now + (duration * 24 * 60 * 60 * 1000)
       
+      const estimatedRewards = (stakeAmount * (apy / 100) * duration) / 365
+      
       const newStake: StakePosition = {
         id: Date.now().toString(),
         currency: selectedCrypto,
@@ -56,7 +58,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
         apy,
         startDate: now,
         endDate,
-        rewards: 0,
+        rewards: estimatedRewards,
         durationDays: duration,
       }
       
@@ -68,6 +70,18 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
         currency: selectedCrypto,
         status: 'completed',
       }
+      
+      setHoldings((currentHoldings) => {
+        return (currentHoldings || []).map(holding => {
+          if (holding.symbol === selectedCrypto) {
+            return {
+              ...holding,
+              amount: holding.amount - stakeAmount
+            }
+          }
+          return holding
+        })
+      })
       
       setStakes((current) => [...(current || []), newStake])
       setTransactions((current) => [newTransaction, ...(current || [])])
@@ -143,24 +157,41 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="30">30 days</SelectItem>
-                <SelectItem value="60">60 days</SelectItem>
-                <SelectItem value="90">90 days</SelectItem>
-                <SelectItem value="180">180 days</SelectItem>
-                <SelectItem value="365">365 days</SelectItem>
+                <SelectItem value="30">30 days (1 month)</SelectItem>
+                <SelectItem value="60">60 days (2 months)</SelectItem>
+                <SelectItem value="90">90 days (3 months)</SelectItem>
+                <SelectItem value="92">92 days</SelectItem>
+                <SelectItem value="153">153 days (5 months)</SelectItem>
+                <SelectItem value="176">176 days (6 months)</SelectItem>
+                <SelectItem value="180">180 days (6 months)</SelectItem>
+                <SelectItem value="207">207 days (7 months)</SelectItem>
+                <SelectItem value="365">365 days (1 year)</SelectItem>
               </SelectContent>
             </Select>
           </div>
           
           <div className="space-y-2">
             <label className="text-sm font-medium">Amount</label>
-            <Input
-              type="number"
-              placeholder="0.00"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              step="any"
-            />
+            <div className="relative">
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                step="any"
+              />
+              {currentHolding && currentHolding.amount > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-2 text-xs font-semibold"
+                  onClick={() => setAmount(currentHolding.amount.toString())}
+                >
+                  Max
+                </Button>
+              )}
+            </div>
             {amount && parseFloat(amount) > 0 && (
               <div className="text-sm p-3 bg-success/10 border border-success/20 rounded-lg">
                 <div className="text-muted-foreground text-xs mb-1">Estimated earnings for {duration} days:</div>

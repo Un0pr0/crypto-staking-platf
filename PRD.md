@@ -48,11 +48,11 @@ This is a portfolio tracking tool with simulated transactions. It manages multip
 - **Success criteria**: Locked funds removed from available balance, maturity date calculated, interest preview shown
 
 ### Staking (Стейкинг)
-- **Functionality**: Stake cryptocurrency to earn simulated rewards over time
-- **Purpose**: Demonstrates flexible staking with ongoing rewards
-- **Trigger**: User clicks "Staking" tab/button
-- **Progression**: View staking → Select cryptocurrency → Enter stake amount → See APY → Confirm → Stake active → Rewards accumulate → Can unstake anytime
-- **Success criteria**: Staked amount locked, rewards calculate based on time staked, can unstake back to balance
+- **Functionality**: Stake cryptocurrency to earn simulated rewards over time with available balance tracking
+- **Purpose**: Demonstrates flexible staking with ongoing rewards and balance management
+- **Trigger**: User clicks "Staking" tab/button or "Start Staking" button
+- **Progression**: View staking dashboard (shows total staked, rewards earned, available USDT balance) → Click "Start Staking" → Select cryptocurrency (USDT default) → Choose duration (30-365 days) → Enter amount or click "Max" button → See estimated earnings → Confirm → Funds deducted from available balance → Stake active → Rewards accumulate → Transaction logged
+- **Success criteria**: Staked amount deducted from holdings balance, rewards calculate based on time staked and APY, available USDT balance visible on dashboard, can create multiple staking positions with different durations
 
 ### History (История)
 - **Functionality**: Displays chronological log of all transactions

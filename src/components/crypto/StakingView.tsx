@@ -4,13 +4,14 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, ChartLineUp } from '@phosphor-icons/react'
-import { StakePosition } from '@/lib/types'
+import { Plus, ChartLineUp, Wallet } from '@phosphor-icons/react'
+import { StakePosition, CryptoHolding } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD, calculateStakingRewards } from '@/lib/crypto-utils'
 import { CreateStakeDialog } from './CreateStakeDialog'
 
 export function StakingView() {
   const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
+  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
   const [initialized, setInitialized] = useState(false)
   
@@ -66,6 +67,9 @@ export function StakingView() {
   
   const activeStakes = stakes || []
   
+  const usdtHolding = (holdings || []).find(h => h.symbol === 'USDT')
+  const availableUSDT = usdtHolding?.amount || 0
+  
   const totalStaked = activeStakes.reduce((sum, stake) => {
     return sum + stake.amount * CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO].priceUSD
   }, 0)
@@ -99,7 +103,7 @@ export function StakingView() {
           </Button>
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mt-6">
+        <div className="grid grid-cols-3 gap-4 mt-6">
           <div>
             <div className="text-xs text-muted-foreground">Active Positions</div>
             <div className="text-xl font-semibold">{activeStakes.length}</div>
@@ -107,6 +111,13 @@ export function StakingView() {
           <div>
             <div className="text-xs text-muted-foreground">Rewards Earned</div>
             <div className="text-xl font-semibold text-success">{formatUSD(totalRewards)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground flex items-center gap-1">
+              <Wallet size={14} />
+              Available USDT
+            </div>
+            <div className="text-xl font-semibold text-accent">{formatCryptoAmount(availableUSDT)}</div>
           </div>
         </div>
       </Card>
@@ -118,10 +129,22 @@ export function StakingView() {
           <p className="text-muted-foreground mb-4">
             Start earning rewards on your crypto assets
           </p>
-          <Button onClick={() => setCreateOpen(true)} className="gap-2">
-            <Plus />
-            Start First Stake
-          </Button>
+          {availableUSDT > 0 ? (
+            <Button onClick={() => setCreateOpen(true)} className="gap-2">
+              <Plus />
+              Start First Stake
+            </Button>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Add USDT to your balance to start staking
+              </p>
+              <Button onClick={() => setCreateOpen(true)} variant="secondary" className="gap-2">
+                <Plus />
+                View Staking Options
+              </Button>
+            </div>
+          )}
         </Card>
       ) : (
         <Card>
