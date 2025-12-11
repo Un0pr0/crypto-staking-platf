@@ -137,8 +137,9 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
               </SelectContent>
             </Select>
             {currentHolding && (
-              <div className="text-xs text-muted-foreground">
-                Available: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Wallet Balance:</span>
+                <span className="font-semibold text-accent">{formatCryptoAmount(currentHolding.amount)} {selectedCrypto}</span>
               </div>
             )}
           </div>
@@ -199,6 +200,10 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
           >
             {loading ? 'Creating...' : 'Create Deposit'}
           </Button>
+          
+          <p className="text-xs text-muted-foreground text-center">
+            Funds will be deducted from your wallet balance
+          </p>
         </div>
       </DialogContent>
     </Dialog>

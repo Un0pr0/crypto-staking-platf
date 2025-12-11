@@ -185,9 +185,10 @@ export function DepositsView() {
           <div>
             <div className="text-xs text-muted-foreground flex items-center gap-1">
               <Wallet size={14} />
-              Available USDT
+              Shared Wallet
             </div>
-            <div className="text-xl font-semibold text-accent">{formatCryptoAmount(availableUSDT)}</div>
+            <div className="text-xl font-semibold text-accent">{formatCryptoAmount(availableUSDT)} USDT</div>
+            <div className="text-[10px] text-muted-foreground/80 mt-0.5 leading-tight">For deposits & staking</div>
           </div>
         </div>
       </Card>

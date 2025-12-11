@@ -41,8 +41,11 @@ export function BalanceView() {
     <div className="space-y-6">
       <Card className="p-8 balance-gradient border-primary/20">
         <div className="text-sm text-muted-foreground mb-2">Total Balance</div>
-        <div className="text-5xl font-bold mb-8 tracking-tight">
+        <div className="text-5xl font-bold mb-2 tracking-tight">
           {formatUSD(totalBalance)}
+        </div>
+        <div className="text-xs text-muted-foreground mb-8">
+          Shared across Balance, Deposits, and Staking
         </div>
         
         <div className="flex gap-3 flex-wrap">

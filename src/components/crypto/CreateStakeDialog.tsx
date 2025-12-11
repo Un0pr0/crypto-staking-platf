@@ -148,8 +148,9 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
               </SelectContent>
             </Select>
             {currentHolding && (
-              <div className="text-xs text-muted-foreground">
-                Available: {formatCryptoAmount(currentHolding.amount)} {selectedCrypto}
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Wallet Balance:</span>
+                <span className="font-semibold text-accent">{formatCryptoAmount(currentHolding.amount)} {selectedCrypto}</span>
               </div>
             )}
           </div>
@@ -221,9 +222,14 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
             {loading ? 'Creating...' : 'Start Staking'}
           </Button>
           
-          <p className="text-xs text-muted-foreground text-center">
-            You can unstake your funds at any time
-          </p>
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground text-center">
+              Funds will be deducted from your wallet balance
+            </p>
+            <p className="text-xs text-muted-foreground text-center">
+              You can unstake your funds at any time
+            </p>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

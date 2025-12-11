@@ -13,11 +13,11 @@ This is a portfolio tracking tool with simulated transactions. It manages multip
 ## Essential Features
 
 ### Balance Display
-- **Functionality**: Shows total portfolio value in USD and breakdown by cryptocurrency holdings
-- **Purpose**: Provides immediate overview of user's simulated crypto assets
+- **Functionality**: Shows total portfolio value in USD and breakdown by cryptocurrency holdings, with shared balance across all features
+- **Purpose**: Provides immediate overview of user's simulated crypto assets that are available for deposits and staking
 - **Trigger**: Automatically displayed on app load and updated after any transaction
-- **Progression**: App loads → Balance calculates from holdings → Displays total with individual coin breakdowns → Updates in real-time
-- **Success criteria**: Balance accurately reflects sum of all holdings at current simulated prices
+- **Progression**: App loads → Balance calculates from holdings → Displays total with individual coin breakdowns → Updates in real-time across all tabs
+- **Success criteria**: Balance accurately reflects sum of all holdings at current simulated prices, visible and synchronized across Balance, Deposits, and Staking tabs
 
 ### Receive (Получить)
 - **Functionality**: Generates a simulated wallet address for receiving cryptocurrency
@@ -41,18 +41,18 @@ This is a portfolio tracking tool with simulated transactions. It manages multip
 - **Success criteria**: Both crypto balances update correctly based on simulated exchange rate
 
 ### Deposits (Депозиты)
-- **Functionality**: Lock cryptocurrency for fixed term to earn simulated interest
-- **Purpose**: Demonstrates time-locked savings products
+- **Functionality**: Lock cryptocurrency for fixed term to earn simulated interest, with shared wallet balance display
+- **Purpose**: Demonstrates time-locked savings products using funds from shared wallet
 - **Trigger**: User clicks "Deposits" tab/button
-- **Progression**: View deposits → Create new deposit → Select cryptocurrency → Choose term (30/60/90 days) → See APY → Confirm → Funds locked → Track maturity date
-- **Success criteria**: Locked funds removed from available balance, maturity date calculated, interest preview shown
+- **Progression**: View deposits dashboard (shows total in deposits, interest earned, shared wallet balance) → Create new deposit → Select cryptocurrency → Choose term (30/60/90 days) → See APY and wallet balance → Enter amount → Confirm → Funds deducted from shared wallet → Deposit active → Track maturity date
+- **Success criteria**: Locked funds removed from shared wallet balance (visible across Balance, Deposits, and Staking tabs), maturity date calculated, interest preview shown, wallet balance displayed with clarification it's shared with staking
 
 ### Staking (Стейкинг)
-- **Functionality**: Stake cryptocurrency to earn simulated rewards over time with available balance tracking
-- **Purpose**: Demonstrates flexible staking with ongoing rewards and balance management
+- **Functionality**: Stake cryptocurrency to earn simulated rewards over time with shared wallet balance tracking
+- **Purpose**: Demonstrates flexible staking with ongoing rewards and shared balance management
 - **Trigger**: User clicks "Staking" tab/button or "Start Staking" button
-- **Progression**: View staking dashboard (shows total staked, rewards earned, available USDT balance) → Click "Start Staking" → Select cryptocurrency (USDT default) → Choose duration (30-365 days) → Enter amount or click "Max" button → See estimated earnings → Confirm → Funds deducted from available balance → Stake active → Rewards accumulate → Transaction logged
-- **Success criteria**: Staked amount deducted from holdings balance, rewards calculate based on time staked and APY, available USDT balance visible on dashboard, can create multiple staking positions with different durations
+- **Progression**: View staking dashboard (shows total staked, rewards earned, shared wallet balance) → Click "Start Staking" → Select cryptocurrency (USDT default) → Choose duration (30-365 days) → See wallet balance → Enter amount or click "Max" button → See estimated earnings → Confirm → Funds deducted from shared wallet → Stake active → Rewards accumulate → Transaction logged
+- **Success criteria**: Staked amount deducted from shared wallet balance (synchronized across Balance, Deposits, and Staking tabs), rewards calculate based on time staked and APY, shared wallet balance visible on dashboard with clarification it's shared with deposits, can create multiple staking positions with different durations
 
 ### History (История)
 - **Functionality**: Displays chronological log of all transactions
@@ -62,12 +62,12 @@ This is a portfolio tracking tool with simulated transactions. It manages multip
 - **Success criteria**: All send/receive/swap/stake/unstake/deposit actions logged with timestamps and details
 
 ## Edge Case Handling
-- **Insufficient Balance**: Prevent transactions exceeding available balance with clear error messaging
+- **Insufficient Balance**: Prevent transactions exceeding shared wallet balance with clear error messaging
 - **Invalid Addresses**: Validate address format for send transactions (basic format check)
 - **Zero/Negative Amounts**: Reject invalid transaction amounts with validation feedback
 - **Empty Portfolio**: Show welcoming empty state with suggestion to add funds or view demo data
 - **Pending Operations**: Disable duplicate actions while transaction is processing (prevent double-spend)
-- **Locked Funds**: Clearly distinguish between available, staked, and deposited funds
+- **Locked Funds**: Clearly distinguish between shared wallet balance and locked funds (staked/deposited), with visual indicators showing funds are shared across deposits and staking
 
 ## Design Direction
 The design should evoke confidence, security, and modernity. Users should feel they're interacting with a professional financial platform. The aesthetic should embrace crypto-native design patterns - dark sophisticated backgrounds with vibrant accent colors, sharp edges mixed with strategic roundness, and clear data hierarchy. Should feel premium but not intimidating.
