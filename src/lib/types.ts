@@ -23,7 +23,9 @@ export interface StakePosition {
   amount: number
   apy: number
   startDate: number
+  endDate: number
   rewards: number
+  durationDays: number
 }
 
 export interface DepositPosition {

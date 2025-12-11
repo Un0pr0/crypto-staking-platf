@@ -19,6 +19,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('ETH')
   const [amount, setAmount] = useState('')
+  const [duration, setDuration] = useState<number>(30)
   const [loading, setLoading] = useState(false)
   
   const availableHoldings = (holdings || []).filter(h => h.amount > 0 && STAKING_APYS[h.symbol as Cryptocurrency] > 0)
@@ -46,6 +47,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
     
     setTimeout(() => {
       const now = Date.now()
+      const endDate = now + (duration * 24 * 60 * 60 * 1000)
       
       const newStake: StakePosition = {
         id: Date.now().toString(),
@@ -53,7 +55,9 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
         amount: stakeAmount,
         apy,
         startDate: now,
+        endDate,
         rewards: 0,
+        durationDays: duration,
       }
       
       const newTransaction: Transaction = {
@@ -133,6 +137,22 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
           </div>
           
           <div className="space-y-2">
+            <label className="text-sm font-medium">Duration</label>
+            <Select value={duration.toString()} onValueChange={(v) => setDuration(parseInt(v))}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="30">30 days</SelectItem>
+                <SelectItem value="60">60 days</SelectItem>
+                <SelectItem value="90">90 days</SelectItem>
+                <SelectItem value="180">180 days</SelectItem>
+                <SelectItem value="365">365 days</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
             <label className="text-sm font-medium">Amount</label>
             <Input
               type="number"
@@ -143,9 +163,9 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
             />
             {amount && parseFloat(amount) > 0 && (
               <div className="text-sm p-3 bg-success/10 border border-success/20 rounded-lg">
-                <div className="text-muted-foreground text-xs mb-1">Estimated yearly earnings:</div>
+                <div className="text-muted-foreground text-xs mb-1">Estimated earnings for {duration} days:</div>
                 <div className="font-semibold text-success">
-                  +{formatCryptoAmount(parseFloat(amount) * (apy / 100))} {selectedCrypto}
+                  +{formatCryptoAmount(parseFloat(amount) * (apy / 100) * (duration / 365))} {selectedCrypto}
                 </div>
               </div>
             )}

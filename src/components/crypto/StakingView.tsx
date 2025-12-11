@@ -3,6 +3,7 @@ import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Plus, ChartLineUp } from '@phosphor-icons/react'
 import { StakePosition } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD, calculateStakingRewards } from '@/lib/crypto-utils'
@@ -25,64 +26,12 @@ export function StakingView() {
     return sum + currentRewards * CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO].priceUSD
   }, 0)
   
-  const renderStake = (stake: StakePosition) => {
-    const info = CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO]
-    const now = Date.now()
-    const daysStaked = Math.floor((now - stake.startDate) / (1000 * 60 * 60 * 24))
-    const currentRewards = calculateStakingRewards(stake.amount, stake.apy, (now - stake.startDate) / (1000 * 60 * 60 * 24))
-    
-    return (
-      <Card key={stake.id} className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div 
-              className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
-              style={{ backgroundColor: info.color }}
-            >
-              {info.symbol}
-            </div>
-            <div>
-              <div className="font-semibold">{info.name}</div>
-              <div className="text-sm text-muted-foreground">{stake.apy}% APY</div>
-            </div>
-          </div>
-          <Badge variant="secondary">Active</Badge>
-        </div>
-        
-        <div className="space-y-3">
-          <div className="flex justify-between items-baseline">
-            <span className="text-sm text-muted-foreground">Staked</span>
-            <div className="text-right">
-              <div className="font-semibold">{formatCryptoAmount(stake.amount)} {stake.currency}</div>
-              <div className="text-xs text-muted-foreground">
-                {formatUSD(stake.amount * info.priceUSD)}
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex justify-between items-baseline">
-            <span className="text-sm text-muted-foreground">Rewards</span>
-            <div className="text-right">
-              <div className="font-semibold text-success">
-                +{formatCryptoAmount(currentRewards)} {stake.currency}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {formatUSD(currentRewards * info.priceUSD)}
-              </div>
-            </div>
-          </div>
-          
-          <div className="pt-2 border-t border-border">
-            <div className="text-xs text-muted-foreground mb-2">
-              Staking for: {daysStaked} {daysStaked === 1 ? 'day' : 'days'}
-            </div>
-            <Button variant="outline" size="sm" className="w-full">
-              Unstake
-            </Button>
-          </div>
-        </div>
-      </Card>
-    )
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
   }
   
   return (
@@ -124,12 +73,79 @@ export function StakingView() {
           </Button>
         </Card>
       ) : (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Active Staking</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {activeStakes.map(renderStake)}
+        <Card>
+          <div className="p-6 border-b border-border">
+            <h2 className="text-xl font-semibold">Active Staking Positions</h2>
           </div>
-        </div>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Start Date</TableHead>
+                  <TableHead>End Date</TableHead>
+                  <TableHead>Stake Size</TableHead>
+                  <TableHead>Profit</TableHead>
+                  <TableHead>Days</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {activeStakes.map((stake) => {
+                  const info = CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO]
+                  const now = Date.now()
+                  const daysElapsed = Math.floor((now - stake.startDate) / (1000 * 60 * 60 * 24))
+                  const currentRewards = calculateStakingRewards(stake.amount, stake.apy, (now - stake.startDate) / (1000 * 60 * 60 * 24))
+                  const isCompleted = now >= stake.endDate
+                  
+                  return (
+                    <TableRow key={stake.id}>
+                      <TableCell className="font-medium">
+                        {formatDate(stake.startDate)}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {formatDate(stake.endDate)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                            style={{ backgroundColor: info.color }}
+                          >
+                            {info.symbol}
+                          </div>
+                          <div>
+                            <div className="font-semibold">
+                              {formatCryptoAmount(stake.amount)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {formatUSD(stake.amount * info.priceUSD)}
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-success font-semibold">
+                          +{formatCryptoAmount(currentRewards)} {stake.currency}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatUSD(currentRewards * info.priceUSD)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-mono">
+                        {daysElapsed} / {stake.durationDays}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={isCompleted ? "default" : "secondary"}>
+                          {isCompleted ? "Completed" : "Active"}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
       )}
       
       <CreateStakeDialog open={createOpen} onOpenChange={setCreateOpen} />
