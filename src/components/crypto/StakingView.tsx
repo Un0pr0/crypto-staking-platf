@@ -12,7 +12,7 @@ import { CreateStakeDialog } from './CreateStakeDialog'
 export function StakingView() {
   const [stakes] = useKV<StakePosition[]>('stakes', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
-  const [createOpen, setCreateOpen] = useState(false)
+  const [createOpen, setCreateOpen] = useState(true)
   
   const activeStakes = stakes || []
   

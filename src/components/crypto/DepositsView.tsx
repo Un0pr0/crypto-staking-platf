@@ -13,7 +13,7 @@ import { DepositDetailDialog } from './DepositDetailDialog'
 export function DepositsView() {
   const [deposits] = useKV<DepositPosition[]>('deposits', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
-  const [createOpen, setCreateOpen] = useState(false)
+  const [createOpen, setCreateOpen] = useState(true)
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
   
