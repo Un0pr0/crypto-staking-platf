@@ -42,54 +42,55 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
     
     setLoading(true)
     
-    setTimeout(() => {
-      const now = Date.now()
-      const maturityDate = now + term * 24 * 60 * 60 * 1000
-      
-      const newDeposit: DepositPosition = {
-        id: Date.now().toString(),
-        currency: selectedCrypto,
-        amount: depositAmount,
-        apy,
-        startDate: now,
-        term,
-        maturityDate,
-        interest: calculateDepositInterest(depositAmount, apy, term),
-      }
-      
-      const newTransaction: Transaction = {
-        id: Date.now().toString(),
-        type: 'deposit',
-        timestamp: now,
-        amount: depositAmount,
-        currency: selectedCrypto,
-        status: 'completed',
-      }
-      
-      setHoldings((currentHoldings) => {
-        return (currentHoldings || []).map(holding => {
-          if (holding.symbol === selectedCrypto) {
-            return {
-              ...holding,
-              amount: holding.amount - depositAmount
-            }
+    const now = Date.now()
+    const maturityDate = now + term * 24 * 60 * 60 * 1000
+    
+    const newDeposit: DepositPosition = {
+      id: Date.now().toString(),
+      currency: selectedCrypto,
+      amount: depositAmount,
+      apy,
+      startDate: now,
+      term,
+      maturityDate,
+      interest: calculateDepositInterest(depositAmount, apy, term),
+    }
+    
+    const newTransaction: Transaction = {
+      id: Date.now().toString(),
+      type: 'deposit',
+      timestamp: now,
+      amount: depositAmount,
+      currency: selectedCrypto,
+      status: 'completed',
+    }
+    
+    setHoldings((currentHoldings) => {
+      return (currentHoldings || []).map(holding => {
+        if (holding.symbol === selectedCrypto) {
+          return {
+            ...holding,
+            amount: holding.amount - depositAmount
           }
-          return holding
-        })
+        }
+        return holding
       })
-      
-      setDeposits((current) => {
-        const activeDeposits = (current || []).filter(d => Date.now() < d.maturityDate)
-        return [...activeDeposits, newDeposit]
-      })
-      
-      setTransactions((current) => [newTransaction, ...(current || [])])
-      
-      toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
+    })
+    
+    setDeposits((current) => {
+      const activeDeposits = (current || []).filter(d => Date.now() < d.maturityDate)
+      return [...activeDeposits, newDeposit]
+    })
+    
+    setTransactions((current) => [newTransaction, ...(current || [])])
+    
+    toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
+    
+    setTimeout(() => {
       setLoading(false)
       setAmount('')
       onOpenChange(false)
-    }, 1000)
+    }, 500)
   }
   
   return (
