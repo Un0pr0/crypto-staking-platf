@@ -45,51 +45,63 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
     
     setLoading(true)
     
-    const now = Date.now()
-    const endDate = now + (duration * 24 * 60 * 60 * 1000)
-    
-    const estimatedRewards = (stakeAmount * (apy / 100) * duration) / 365
-    
-    const newStake: StakePosition = {
-      id: `stake-${now}`,
-      currency: selectedCrypto,
-      amount: stakeAmount,
-      apy,
-      startDate: now,
-      endDate,
-      rewards: estimatedRewards,
-      durationDays: duration,
-    }
-    
-    const newTransaction: Transaction = {
-      id: `transaction-${now}`,
-      type: 'stake',
-      timestamp: now,
-      amount: stakeAmount,
-      currency: selectedCrypto,
-      status: 'completed',
-    }
-    
-    setHoldings((currentHoldings) => {
-      return (currentHoldings || []).map(holding => {
-        if (holding.symbol === selectedCrypto) {
-          return {
-            ...holding,
-            amount: holding.amount - stakeAmount
+    try {
+      const now = Date.now()
+      const endDate = now + (duration * 24 * 60 * 60 * 1000)
+      
+      const estimatedRewards = (stakeAmount * (apy / 100) * duration) / 365
+      
+      const newStake: StakePosition = {
+        id: `stake-${now}`,
+        currency: selectedCrypto,
+        amount: stakeAmount,
+        apy,
+        startDate: now,
+        endDate,
+        rewards: estimatedRewards,
+        durationDays: duration,
+      }
+      
+      const newTransaction: Transaction = {
+        id: `transaction-${now}`,
+        type: 'stake',
+        timestamp: now,
+        amount: stakeAmount,
+        currency: selectedCrypto,
+        status: 'completed',
+      }
+      
+      await setHoldings((currentHoldings) => {
+        return (currentHoldings || []).map(holding => {
+          if (holding.symbol === selectedCrypto) {
+            return {
+              ...holding,
+              amount: holding.amount - stakeAmount
+            }
           }
-        }
-        return holding
+          return holding
+        })
       })
-    })
-    
-    setStakes((current) => [...(current || []), newStake])
-    setTransactions((current) => [newTransaction, ...(current || [])])
-    
-    toast.success(`Staking started: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
-    
-    setLoading(false)
-    setAmount('')
-    onOpenChange(false)
+      
+      await setStakes((current) => {
+        const updatedStakes = [...(current || []), newStake]
+        console.log('New stake added:', newStake)
+        console.log('Total stakes:', updatedStakes.length)
+        return updatedStakes
+      })
+      
+      await setTransactions((current) => [newTransaction, ...(current || [])])
+      
+      toast.success(`Staking started: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
+      
+      setAmount('')
+      onOpenChange(false)
+    } catch (error) {
+      console.error('Error creating stake:', error)
+      toast.error('Failed to create stake')
+    } finally {
+      setLoading(false)
+    }
   }
   
   return (
