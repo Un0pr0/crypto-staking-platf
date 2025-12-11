@@ -50,7 +50,7 @@ export function DepositsView() {
           amount: data.amount,
           apy,
           startDate: data.startDate,
-          term: 90,
+          term: termDays,
           maturityDate: data.endDate,
           interest: data.interest,
         }
