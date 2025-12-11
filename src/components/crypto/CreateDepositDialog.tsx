@@ -77,10 +77,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
       })
     })
     
-    setDeposits((current) => {
-      const activeDeposits = (current || []).filter(d => Date.now() < d.maturityDate)
-      return [...activeDeposits, newDeposit]
-    })
+    setDeposits((current) => [...(current || []), newDeposit])
     
     setTransactions((current) => [newTransaction, ...(current || [])])
     
