@@ -13,10 +13,10 @@ export function StakingView() {
   const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
-  const [initialized, setInitialized] = useState(false)
+  const [initialized, setInitialized] = useKV<boolean>('stakes-initialized', false)
   
   useEffect(() => {
-    if (!initialized && stakes?.length === 0) {
+    if (!initialized) {
       const stakingData = [
         {
           startDate: new Date('2025-06-18').getTime(),
@@ -63,7 +63,7 @@ export function StakingView() {
       setStakes(initialStakes)
       setInitialized(true)
     }
-  }, [stakes, initialized, setStakes])
+  }, [initialized, setStakes, setInitialized])
   
   const activeStakes = stakes || []
   

@@ -34,7 +34,7 @@ export interface DepositPosition {
   amount: number
   apy: number
   startDate: number
-  term: 30 | 60 | 90
+  term: number
   maturityDate: number
   interest: number
 }
