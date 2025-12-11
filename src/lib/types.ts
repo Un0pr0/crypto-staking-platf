@@ -39,4 +39,4 @@ export interface DepositPosition {
   interest: number
 }
 
-export type Cryptocurrency = 'BTC' | 'ETH' | 'USDT' | 'BNB' | 'SOL' | 'XRP'
+export type Cryptocurrency = 'BTC' | 'ETH' | 'USDT' | 'TRX' | 'TON' | 'BNB' | 'SOL' | 'XRP'

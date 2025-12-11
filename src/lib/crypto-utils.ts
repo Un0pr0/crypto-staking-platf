@@ -7,6 +7,8 @@ export const CRYPTO_INFO: Record<
   BTC: { name: 'Bitcoin', priceUSD: 43250, color: 'oklch(0.65 0.18 35)', symbol: '₿' },
   ETH: { name: 'Ethereum', priceUSD: 2280, color: 'oklch(0.60 0.15 260)', symbol: 'Ξ' },
   USDT: { name: 'Tether', priceUSD: 1, color: 'oklch(0.65 0.15 145)', symbol: '₮' },
+  TRX: { name: 'Tron', priceUSD: 0.12, color: 'oklch(0.60 0.18 10)', symbol: 'TRX' },
+  TON: { name: 'Toncoin', priceUSD: 5.45, color: 'oklch(0.65 0.15 210)', symbol: 'TON' },
   BNB: { name: 'BNB', priceUSD: 315, color: 'oklch(0.70 0.18 80)', symbol: 'BNB' },
   SOL: { name: 'Solana', priceUSD: 98, color: 'oklch(0.65 0.20 290)', symbol: 'SOL' },
   XRP: { name: 'XRP', priceUSD: 0.52, color: 'oklch(0.60 0.12 220)', symbol: 'XRP' },
@@ -16,15 +18,17 @@ export const STAKING_APYS: Record<Cryptocurrency, number> = {
   BTC: 0,
   ETH: 4.2,
   USDT: 8.5,
+  TRX: 6.0,
+  TON: 5.5,
   BNB: 5.8,
   SOL: 7.1,
   XRP: 3.5,
 }
 
 export const DEPOSIT_APYS: Record<30 | 60 | 90, Record<Cryptocurrency, number>> = {
-  30: { BTC: 2.5, ETH: 5.0, USDT: 9.0, BNB: 6.5, SOL: 8.0, XRP: 4.0 },
-  60: { BTC: 3.5, ETH: 6.5, USDT: 10.5, BNB: 8.0, SOL: 9.5, XRP: 5.5 },
-  90: { BTC: 5.0, ETH: 8.0, USDT: 12.0, BNB: 10.0, SOL: 11.5, XRP: 7.0 },
+  30: { BTC: 2.5, ETH: 5.0, USDT: 9.0, TRX: 7.0, TON: 6.5, BNB: 6.5, SOL: 8.0, XRP: 4.0 },
+  60: { BTC: 3.5, ETH: 6.5, USDT: 10.5, TRX: 8.5, TON: 8.0, BNB: 8.0, SOL: 9.5, XRP: 5.5 },
+  90: { BTC: 5.0, ETH: 8.0, USDT: 12.0, TRX: 10.0, TON: 9.5, BNB: 10.0, SOL: 11.5, XRP: 7.0 },
 }
 
 export function generateWalletAddress(crypto: Cryptocurrency): string {
@@ -32,6 +36,8 @@ export function generateWalletAddress(crypto: Cryptocurrency): string {
     BTC: '1',
     ETH: '0x',
     USDT: '0x',
+    TRX: 'T',
+    TON: 'EQ',
     BNB: 'bnb',
     SOL: '',
     XRP: 'r',
@@ -41,6 +47,8 @@ export function generateWalletAddress(crypto: Cryptocurrency): string {
     BTC: 34,
     ETH: 42,
     USDT: 42,
+    TRX: 34,
+    TON: 48,
     BNB: 42,
     SOL: 44,
     XRP: 34,
