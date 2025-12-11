@@ -14,16 +14,24 @@ export function BalanceView() {
   const [sendOpen, setSendOpen] = useState(false)
   const [receiveOpen, setReceiveOpen] = useState(false)
   const [swapOpen, setSwapOpen] = useState(false)
+  const [initialized, setInitialized] = useKV<boolean>('holdings-initialized', false)
 
   useEffect(() => {
-    setHoldings([
-      { symbol: 'BTC', name: 'Bitcoin', amount: 0, priceUSD: CRYPTO_INFO.BTC.priceUSD },
-      { symbol: 'ETH', name: 'Ethereum', amount: 0, priceUSD: CRYPTO_INFO.ETH.priceUSD },
-      { symbol: 'TRX', name: 'Tron', amount: 0, priceUSD: CRYPTO_INFO.TRX.priceUSD },
-      { symbol: 'TON', name: 'Toncoin', amount: 0, priceUSD: CRYPTO_INFO.TON.priceUSD },
-      { symbol: 'USDT', name: 'Tether', amount: 1801, priceUSD: CRYPTO_INFO.USDT.priceUSD }
-    ])
-  }, [])
+    const initHoldings = async () => {
+      if (!initialized) {
+        setHoldings([
+          { symbol: 'BTC', name: 'Bitcoin', amount: 0, priceUSD: CRYPTO_INFO.BTC.priceUSD },
+          { symbol: 'ETH', name: 'Ethereum', amount: 0, priceUSD: CRYPTO_INFO.ETH.priceUSD },
+          { symbol: 'TRX', name: 'Tron', amount: 0, priceUSD: CRYPTO_INFO.TRX.priceUSD },
+          { symbol: 'TON', name: 'Toncoin', amount: 0, priceUSD: CRYPTO_INFO.TON.priceUSD },
+          { symbol: 'USDT', name: 'Tether', amount: 1801, priceUSD: CRYPTO_INFO.USDT.priceUSD }
+        ])
+        setInitialized(true)
+      }
+    }
+    
+    initHoldings()
+  }, [initialized, setHoldings, setInitialized])
 
   const totalBalance = (holdings || []).reduce((sum, holding) => {
     return sum + holding.amount * CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO].priceUSD

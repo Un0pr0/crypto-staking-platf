@@ -51,7 +51,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
     const estimatedRewards = (stakeAmount * (apy / 100) * duration) / 365
     
     const newStake: StakePosition = {
-      id: Date.now().toString(),
+      id: `stake-${now}`,
       currency: selectedCrypto,
       amount: stakeAmount,
       apy,
@@ -62,7 +62,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
     }
     
     const newTransaction: Transaction = {
-      id: Date.now().toString(),
+      id: `transaction-${now}`,
       type: 'stake',
       timestamp: now,
       amount: stakeAmount,
@@ -87,11 +87,9 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
     
     toast.success(`Staking started: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
     
-    setTimeout(() => {
-      setLoading(false)
-      setAmount('')
-      onOpenChange(false)
-    }, 500)
+    setLoading(false)
+    setAmount('')
+    onOpenChange(false)
   }
   
   return (

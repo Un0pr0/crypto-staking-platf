@@ -16,53 +16,57 @@ export function StakingView() {
   const [initialized, setInitialized] = useKV<boolean>('stakes-initialized', false)
   
   useEffect(() => {
-    if (!initialized) {
-      const stakingData = [
-        {
-          startDate: new Date('2025-06-18').getTime(),
-          endDate: new Date('2025-12-11').getTime(),
-          amount: 1652,
-          rewards: 149,
-        },
-        {
-          startDate: new Date('2025-08-02').getTime(),
-          endDate: new Date('2026-02-25').getTime(),
-          amount: 2565,
-          rewards: 379,
-        },
-        {
-          startDate: new Date('2025-09-26').getTime(),
-          endDate: new Date('2026-02-26').getTime(),
-          amount: 3350,
-          rewards: 496,
-        },
-        {
-          startDate: new Date('2025-10-07').getTime(),
-          endDate: new Date('2026-01-07').getTime(),
-          amount: 2785,
-          rewards: 412,
-        },
-      ]
-      
-      const initialStakes: StakePosition[] = stakingData.map((data, index) => {
-        const durationDays = Math.floor((data.endDate - data.startDate) / (1000 * 60 * 60 * 24))
-        const apy = (data.rewards / data.amount) * (365 / durationDays) * 100
+    const initStakes = async () => {
+      if (!initialized) {
+        const stakingData = [
+          {
+            startDate: new Date('2025-06-18').getTime(),
+            endDate: new Date('2025-12-11').getTime(),
+            amount: 1652,
+            rewards: 149,
+          },
+          {
+            startDate: new Date('2025-08-02').getTime(),
+            endDate: new Date('2026-02-25').getTime(),
+            amount: 2565,
+            rewards: 379,
+          },
+          {
+            startDate: new Date('2025-09-26').getTime(),
+            endDate: new Date('2026-02-26').getTime(),
+            amount: 3350,
+            rewards: 496,
+          },
+          {
+            startDate: new Date('2025-10-07').getTime(),
+            endDate: new Date('2026-01-07').getTime(),
+            amount: 2785,
+            rewards: 412,
+          },
+        ]
         
-        return {
-          id: `initial-stake-${index + 1}`,
-          currency: 'USDT',
-          amount: data.amount,
-          apy,
-          startDate: data.startDate,
-          endDate: data.endDate,
-          rewards: data.rewards,
-          durationDays,
-        }
-      })
-      
-      setStakes(initialStakes)
-      setInitialized(true)
+        const initialStakes: StakePosition[] = stakingData.map((data, index) => {
+          const durationDays = Math.floor((data.endDate - data.startDate) / (1000 * 60 * 60 * 24))
+          const apy = (data.rewards / data.amount) * (365 / durationDays) * 100
+          
+          return {
+            id: `initial-stake-${index + 1}`,
+            currency: 'USDT',
+            amount: data.amount,
+            apy,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            rewards: data.rewards,
+            durationDays,
+          }
+        })
+        
+        setStakes(initialStakes)
+        setInitialized(true)
+      }
     }
+    
+    initStakes()
   }, [initialized, setStakes, setInitialized])
   
   const activeStakes = stakes || []

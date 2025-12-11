@@ -46,7 +46,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
     const maturityDate = now + term * 24 * 60 * 60 * 1000
     
     const newDeposit: DepositPosition = {
-      id: Date.now().toString(),
+      id: `deposit-${now}`,
       currency: selectedCrypto,
       amount: depositAmount,
       apy,
@@ -57,7 +57,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
     }
     
     const newTransaction: Transaction = {
-      id: Date.now().toString(),
+      id: `transaction-${now}`,
       type: 'deposit',
       timestamp: now,
       amount: depositAmount,
@@ -86,11 +86,9 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
     
     toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
     
-    setTimeout(() => {
-      setLoading(false)
-      setAmount('')
-      onOpenChange(false)
-    }, 500)
+    setLoading(false)
+    setAmount('')
+    onOpenChange(false)
   }
   
   return (
