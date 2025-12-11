@@ -51,7 +51,7 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
       
       setTransactions((current) => [newTransaction, ...(current || [])])
       
-      toast.success(`Sent ${formatCryptoAmount(sendAmount)} ${selectedCrypto}`)
+      toast.success('Withdrawal request created. Please allow up to 48 hours for processing.')
       setLoading(false)
       setAmount('')
       setAddress('')
