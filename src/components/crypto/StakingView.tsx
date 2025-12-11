@@ -16,22 +16,50 @@ export function StakingView() {
   
   useEffect(() => {
     if (!initialized && stakes?.length === 0) {
-      const startDate = new Date('2025-06-18').getTime()
-      const endDate = new Date('2025-12-11').getTime()
-      const durationDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24))
+      const stakingData = [
+        {
+          startDate: new Date('2025-06-18').getTime(),
+          endDate: new Date('2025-12-11').getTime(),
+          amount: 1652,
+          rewards: 149,
+        },
+        {
+          startDate: new Date('2025-08-02').getTime(),
+          endDate: new Date('2025-02-25').getTime(),
+          amount: 2565,
+          rewards: 379,
+        },
+        {
+          startDate: new Date('2025-09-26').getTime(),
+          endDate: new Date('2026-02-26').getTime(),
+          amount: 3350,
+          rewards: 496,
+        },
+        {
+          startDate: new Date('2025-10-07').getTime(),
+          endDate: new Date('2026-01-07').getTime(),
+          amount: 2785,
+          rewards: 412,
+        },
+      ]
       
-      const initialStake: StakePosition = {
-        id: 'initial-stake-1',
-        currency: 'ETH',
-        amount: 1652,
-        apy: 5.2,
-        startDate,
-        endDate,
-        rewards: 149,
-        durationDays,
-      }
+      const initialStakes: StakePosition[] = stakingData.map((data, index) => {
+        const durationDays = Math.floor((data.endDate - data.startDate) / (1000 * 60 * 60 * 24))
+        const apy = (data.rewards / data.amount) * (365 / durationDays) * 100
+        
+        return {
+          id: `initial-stake-${index + 1}`,
+          currency: 'USDT',
+          amount: data.amount,
+          apy,
+          startDate: data.startDate,
+          endDate: data.endDate,
+          rewards: data.rewards,
+          durationDays,
+        }
+      })
       
-      setStakes([initialStake])
+      setStakes(initialStakes)
       setInitialized(true)
     }
   }, [stakes, initialized, setStakes])
@@ -138,20 +166,20 @@ export function StakingView() {
                           </div>
                           <div>
                             <div className="font-semibold">
-                              {formatCryptoAmount(stake.amount)}
+                              {formatUSD(stake.amount)}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {formatUSD(stake.amount * info.priceUSD)}
+                              {stake.currency}
                             </div>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="text-success font-semibold">
-                          +{formatCryptoAmount(currentRewards)} {stake.currency}
+                          {formatUSD(stake.rewards)}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {formatUSD(currentRewards * info.priceUSD)}
+                          Expected
                         </div>
                       </TableCell>
                       <TableCell className="font-mono">
