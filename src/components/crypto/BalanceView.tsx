@@ -20,7 +20,7 @@ export function BalanceView() {
 
   useEffect(() => {
     const initHoldings = async () => {
-      if (!initialized && (!holdings || holdings.length === 0)) {
+      if (!initialized) {
         setHoldings([
           { symbol: 'USDT', name: 'Tether', amount: 6135, priceUSD: CRYPTO_INFO.USDT.priceUSD },
           { symbol: 'BTC', name: 'Bitcoin', amount: 0, priceUSD: CRYPTO_INFO.BTC.priceUSD },
@@ -33,7 +33,7 @@ export function BalanceView() {
     }
     
     initHoldings()
-  }, [initialized, holdings, setHoldings, setInitialized])
+  }, [initialized, setHoldings, setInitialized])
 
   const holdingsBalance = (holdings || []).reduce((sum, holding) => {
     return sum + holding.amount * CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO].priceUSD
