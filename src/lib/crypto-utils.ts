@@ -17,7 +17,7 @@ export const CRYPTO_INFO: Record<
 export const STAKING_APYS: Record<Cryptocurrency, number> = {
   BTC: 0,
   ETH: 4.2,
-  USDT: 0,
+  USDT: 13,
   TRX: 6.0,
   TON: 5.5,
   BNB: 5.8,
@@ -26,9 +26,29 @@ export const STAKING_APYS: Record<Cryptocurrency, number> = {
 }
 
 export const DEPOSIT_APYS: Record<30 | 60 | 90, Record<Cryptocurrency, number>> = {
-  30: { BTC: 2.5, ETH: 5.0, USDT: 9.0, TRX: 7.0, TON: 6.5, BNB: 6.5, SOL: 8.0, XRP: 4.0 },
-  60: { BTC: 3.5, ETH: 6.5, USDT: 10.5, TRX: 8.5, TON: 8.0, BNB: 8.0, SOL: 9.5, XRP: 5.5 },
-  90: { BTC: 5.0, ETH: 8.0, USDT: 12.0, TRX: 10.0, TON: 9.5, BNB: 10.0, SOL: 11.5, XRP: 7.0 },
+  30: { BTC: 2.5, ETH: 5.0, USDT: 19.0, TRX: 7.0, TON: 6.5, BNB: 6.5, SOL: 8.0, XRP: 4.0 },
+  60: { BTC: 3.5, ETH: 6.5, USDT: 21.0, TRX: 8.5, TON: 8.0, BNB: 8.0, SOL: 9.5, XRP: 5.5 },
+  90: { BTC: 5.0, ETH: 8.0, USDT: 22.5, TRX: 10.0, TON: 9.5, BNB: 10.0, SOL: 11.5, XRP: 7.0 },
+}
+
+export function getStakingAPY(amount: number, crypto: Cryptocurrency): number {
+  if (crypto !== 'USDT') {
+    return STAKING_APYS[crypto]
+  }
+  
+  if (amount <= 1000) return 13
+  if (amount <= 3000) return 16
+  return 17.5
+}
+
+export function getDepositAPY(amount: number, crypto: Cryptocurrency): number {
+  if (crypto !== 'USDT') {
+    return DEPOSIT_APYS[90][crypto]
+  }
+  
+  if (amount <= 1000) return 19
+  if (amount <= 3000) return 21
+  return 22.5
 }
 
 export function generateWalletAddress(crypto: Cryptocurrency): string {

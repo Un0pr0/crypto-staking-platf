@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { CryptoHolding, DepositPosition, Transaction, Cryptocurrency } from '@/lib/types'
-import { CRYPTO_INFO, DEPOSIT_APYS, formatCryptoAmount, calculateDepositInterest } from '@/lib/crypto-utils'
+import { CRYPTO_INFO, DEPOSIT_APYS, formatCryptoAmount, calculateDepositInterest, getDepositAPY } from '@/lib/crypto-utils'
 import { toast } from 'sonner'
 
 interface CreateDepositDialogProps {
@@ -25,14 +25,9 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
   const availableHoldings = (holdings || []).filter(h => h.amount > 0)
   const currentHolding = availableHoldings.find(h => h.symbol === selectedCrypto)
   
-  const getApyForTerm = (days: number): number => {
-    if (days <= 30) return DEPOSIT_APYS[30][selectedCrypto]
-    if (days <= 60) return DEPOSIT_APYS[60][selectedCrypto]
-    return DEPOSIT_APYS[90][selectedCrypto]
-  }
-  
-  const apy = getApyForTerm(term)
-  const interest = amount ? calculateDepositInterest(parseFloat(amount), apy, term) : 0
+  const numericAmount = parseFloat(amount) || 0
+  const apy = getDepositAPY(numericAmount, selectedCrypto)
+  const interest = amount ? calculateDepositInterest(numericAmount, apy, term) : 0
   
   const handleCreate = async () => {
     if (!amount || !currentHolding) {

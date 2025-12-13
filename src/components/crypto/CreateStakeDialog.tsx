@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { CryptoHolding, StakePosition, Transaction, Cryptocurrency } from '@/lib/types'
-import { CRYPTO_INFO, STAKING_APYS, formatCryptoAmount } from '@/lib/crypto-utils'
+import { CRYPTO_INFO, STAKING_APYS, formatCryptoAmount, getStakingAPY } from '@/lib/crypto-utils'
 import { toast } from 'sonner'
 
 interface CreateStakeDialogProps {
@@ -24,7 +24,8 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
   
   const availableHoldings = (holdings || []).filter(h => h.amount > 0 && STAKING_APYS[h.symbol as Cryptocurrency] > 0)
   const currentHolding = availableHoldings.find(h => h.symbol === selectedCrypto)
-  const apy = STAKING_APYS[selectedCrypto]
+  const numericAmount = parseFloat(amount) || 0
+  const apy = getStakingAPY(numericAmount, selectedCrypto)
   
   const handleCreate = async () => {
     if (!amount || !currentHolding) {
@@ -128,7 +129,8 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
                 ) : (
                   availableHoldings.map((holding) => {
                     const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
-                    const holdingApy = STAKING_APYS[holding.symbol as Cryptocurrency]
+                    const displayAmount = parseFloat(amount) || 0
+                    const holdingApy = getStakingAPY(displayAmount, holding.symbol as Cryptocurrency)
                     return (
                       <SelectItem key={holding.symbol} value={holding.symbol}>
                         <div className="flex items-center gap-2">
