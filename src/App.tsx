@@ -17,9 +17,6 @@ function App() {
           <h1 className="text-4xl font-bold tracking-tight mb-2">
             CryptoVault
           </h1>
-          <p className="text-muted-foreground">
-            Demo Portfolio Management Platform
-          </p>
         </header>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
