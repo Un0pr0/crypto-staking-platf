@@ -14,7 +14,7 @@ export function StakingView() {
   const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
-  const [initialized, setInitialized] = useKV<boolean>('stakes-initialized-v2', false)
+  const [initialized, setInitialized] = useKV<boolean>('stakes-initialized-v3', false)
 
   useEffect(() => {
     if (!initialized) {
@@ -29,9 +29,9 @@ export function StakingView() {
   const usdtHolding = (holdings || []).find(h => h.symbol === 'USDT')
   const availableUSDT = usdtHolding?.amount || 0
   
-  const totalStaked = 10352
+  const totalStaked = 8700
   
-  const totalRewards = 1436
+  const totalRewards = 1287
   
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('en-US', {
