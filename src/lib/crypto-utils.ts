@@ -17,7 +17,7 @@ export const CRYPTO_INFO: Record<
 export const STAKING_APYS: Record<Cryptocurrency, number> = {
   BTC: 0,
   ETH: 4.2,
-  USDT: 8.5,
+  USDT: 0,
   TRX: 6.0,
   TON: 5.5,
   BNB: 5.8,
