@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Toaster } from '@/components/ui/sonner'
 import { Wallet, LockKey, ChartLineUp, ClockCounterClockwise } from '@phosphor-icons/react'
@@ -12,6 +12,15 @@ import { useKV } from '@github/spark/hooks'
 function App() {
   const [activeTab, setActiveTab] = useState('balance')
   const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('cryptovault-auth', false)
+  const [transactionsCleared, setTransactionsCleared] = useKV<boolean>('transactions-cleared-v2', false)
+  const [, setTransactions] = useKV<any[]>('transactions', [])
+
+  useEffect(() => {
+    if (!transactionsCleared) {
+      setTransactions([])
+      setTransactionsCleared(true)
+    }
+  }, [transactionsCleared, setTransactions, setTransactionsCleared])
 
   const handleLogin = () => {
     setIsAuthenticated(true)
