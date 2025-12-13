@@ -6,9 +6,25 @@ import { BalanceView } from '@/components/crypto/BalanceView'
 import { DepositsView } from '@/components/crypto/DepositsView'
 import { StakingView } from '@/components/crypto/StakingView'
 import { HistoryView } from '@/components/crypto/HistoryView'
+import { LoginForm } from '@/components/crypto/LoginForm'
+import { useKV } from '@github/spark/hooks'
 
 function App() {
   const [activeTab, setActiveTab] = useState('balance')
+  const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('cryptovault-auth', false)
+
+  const handleLogin = () => {
+    setIsAuthenticated(true)
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <>
+        <LoginForm onLogin={handleLogin} />
+        <Toaster />
+      </>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
