@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,15 @@ export function DepositsView() {
   const [createOpen, setCreateOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
+  
+  useEffect(() => {
+    const currentDeposits = deposits || []
+    const filteredDeposits = currentDeposits.filter(deposit => deposit.amount !== 1 && deposit.amount !== 1800)
+    
+    if (filteredDeposits.length !== currentDeposits.length) {
+      setDeposits(filteredDeposits)
+    }
+  }, [])
   
   const activeDeposits = (deposits || []).filter(d => Date.now() < d.maturityDate)
   const maturedDeposits = (deposits || []).filter(d => Date.now() >= d.maturityDate)
