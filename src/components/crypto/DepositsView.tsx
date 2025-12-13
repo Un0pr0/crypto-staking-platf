@@ -11,7 +11,7 @@ import { CreateDepositDialog } from './CreateDepositDialog'
 import { DepositDetailDialog } from './DepositDetailDialog'
 
 export function DepositsView() {
-  const [deposits] = useKV<DepositPosition[]>('deposits', [])
+  const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
@@ -32,6 +32,10 @@ export function DepositsView() {
   const handleDepositClick = (deposit: DepositPosition) => {
     setSelectedDeposit(deposit)
     setDetailOpen(true)
+  }
+  
+  const handleDeleteDeposit = (depositId: string) => {
+    setDeposits((currentDeposits) => (currentDeposits || []).filter(d => d.id !== depositId))
   }
   
   const renderDeposit = (deposit: DepositPosition) => {
@@ -169,7 +173,8 @@ export function DepositsView() {
       <DepositDetailDialog 
         deposit={selectedDeposit} 
         open={detailOpen} 
-        onOpenChange={setDetailOpen} 
+        onOpenChange={setDetailOpen}
+        onDelete={handleDeleteDeposit}
       />
     </div>
   )
