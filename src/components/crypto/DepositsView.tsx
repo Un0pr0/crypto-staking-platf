@@ -92,19 +92,6 @@ export function DepositsView() {
               </div>
             </>
           )}
-          
-          {isMatured && (
-            <Button 
-              variant="outline" 
-              className="w-full gap-2"
-              onClick={(e) => {
-                e.stopPropagation()
-              }}
-            >
-              <LockKey />
-              Withdraw with interest
-            </Button>
-          )}
         </div>
       </Card>
     )
