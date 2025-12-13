@@ -11,7 +11,7 @@ import { useKV } from '@github/spark/hooks'
 
 function App() {
   const [activeTab, setActiveTab] = useState('balance')
-  const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('cryptovault-auth', false)
+  const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('cryptovault-auth-v2', false)
   const [transactionsCleared, setTransactionsCleared] = useKV<boolean>('transactions-cleared-v2', false)
   const [, setTransactions] = useKV<any[]>('transactions', [])
 
