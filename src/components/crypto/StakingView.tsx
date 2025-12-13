@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,11 +8,21 @@ import { Plus, ChartLineUp, Wallet } from '@phosphor-icons/react'
 import { StakePosition, CryptoHolding } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD, calculateStakingRewards } from '@/lib/crypto-utils'
 import { CreateStakeDialog } from './CreateStakeDialog'
+import { createStakesData } from '@/lib/add-stakes'
 
 export function StakingView() {
-  const [stakes] = useKV<StakePosition[]>('stakes', [])
+  const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
+  const [initialized, setInitialized] = useKV<boolean>('stakes-initialized', false)
+
+  useEffect(() => {
+    if (!initialized && (!stakes || stakes.length === 0)) {
+      const newStakes = createStakesData()
+      setStakes(newStakes)
+      setInitialized(true)
+    }
+  }, [initialized, stakes, setStakes, setInitialized])
   
   const activeStakes = stakes || []
   
