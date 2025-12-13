@@ -95,6 +95,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
       setAmount('')
       setTerm(60)
       setLoading(false)
+      onOpenChange(false)
     } catch (error) {
       console.error('Error creating deposit:', error)
       toast.error('Failed to create deposit')

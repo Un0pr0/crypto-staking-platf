@@ -100,6 +100,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
       setAmount('')
       setDuration(60)
       setLoading(false)
+      onOpenChange(false)
     } catch (error) {
       console.error('Error creating stake:', error)
       toast.error('Failed to create stake')

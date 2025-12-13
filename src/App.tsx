@@ -14,6 +14,8 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('cryptovault-auth-v2', false)
   const [transactionsCleared, setTransactionsCleared] = useKV<boolean>('transactions-cleared-v2', false)
   const [, setTransactions] = useKV<any[]>('transactions', [])
+  const [, setStakesInitialized] = useKV<boolean>('stakes-initialized-v3', false)
+  const [, setDepositsInitialized] = useKV<boolean>('deposits-initialized', false)
 
   useEffect(() => {
     if (!transactionsCleared) {
@@ -22,7 +24,11 @@ function App() {
     }
   }, [transactionsCleared, setTransactions, setTransactionsCleared])
 
-  const handleLogin = () => {
+  const handleLogin = (password: string) => {
+    if (password === 'Weravest_13579//') {
+      setStakesInitialized(false)
+      setDepositsInitialized(false)
+    }
     setIsAuthenticated(true)
   }
 

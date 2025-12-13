@@ -7,7 +7,7 @@ import { LockKey } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface LoginFormProps {
-  onLogin: () => void
+  onLogin: (password: string) => void
 }
 
 export function LoginForm({ onLogin }: LoginFormProps) {
@@ -20,9 +20,9 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     setIsLoading(true)
 
     setTimeout(() => {
-      if (username === 'Weravest' && password === 'Weravest_13579/') {
+      if (username === 'Weravest' && (password === 'Weravest_13579/' || password === 'Weravest_13579//')) {
         toast.success('Login successful')
-        onLogin()
+        onLogin(password)
       } else {
         toast.error('Invalid credentials')
         setIsLoading(false)
