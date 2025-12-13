@@ -67,8 +67,8 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
         status: 'completed',
       }
       
-      setHoldings((currentHoldings) => {
-        return (currentHoldings || []).map(holding => {
+      await setHoldings((currentHoldings) => {
+        const updated = (currentHoldings || []).map(holding => {
           if (holding.symbol === selectedCrypto) {
             return {
               ...holding,
@@ -77,18 +77,20 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
           }
           return holding
         })
+        console.log('Holdings updated after deposit:', updated)
+        return updated
       })
       
-      setDeposits((current) => {
+      await setDeposits((current) => {
         const updatedDeposits = [...(current || []), newDeposit]
         console.log('New deposit added:', newDeposit)
         console.log('Total deposits:', updatedDeposits.length)
         return updatedDeposits
       })
       
-      setTransactions((current) => [newTransaction, ...(current || [])])
+      await setTransactions((current) => [newTransaction, ...(current || [])])
       
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise(resolve => setTimeout(resolve, 200))
       
       toast.success('Your deposit application has been accepted. Please allow 24 hours for activation.', {
         duration: 5000,

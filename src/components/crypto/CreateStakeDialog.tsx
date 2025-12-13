@@ -72,8 +72,8 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
         status: 'completed',
       }
       
-      setHoldings((currentHoldings) => {
-        return (currentHoldings || []).map(holding => {
+      await setHoldings((currentHoldings) => {
+        const updated = (currentHoldings || []).map(holding => {
           if (holding.symbol === selectedCrypto) {
             return {
               ...holding,
@@ -82,18 +82,20 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
           }
           return holding
         })
+        console.log('Holdings updated after stake:', updated)
+        return updated
       })
       
-      setStakes((current) => {
+      await setStakes((current) => {
         const updatedStakes = [...(current || []), newStake]
         console.log('New stake added:', newStake)
         console.log('Total stakes:', updatedStakes.length)
         return updatedStakes
       })
       
-      setTransactions((current) => [newTransaction, ...(current || [])])
+      await setTransactions((current) => [newTransaction, ...(current || [])])
       
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise(resolve => setTimeout(resolve, 200))
       
       toast.success('Your staking application has been accepted. Please allow 24 hours for activation.', {
         duration: 5000,
