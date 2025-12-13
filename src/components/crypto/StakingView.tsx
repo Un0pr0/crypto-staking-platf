@@ -22,16 +22,16 @@ export function StakingView() {
       setStakes(filteredStakes)
     }
     
-    const targetDate = new Date('2024-10-09T00:00:00').getTime()
+    const targetStartDate = new Date('2024-10-09T00:00:00').getTime()
+    const targetEndDate = new Date('2026-01-01T00:00:00').getTime()
     let needsUpdate = false
     const updatedStakes = currentStakes.map(stake => {
       if (stake.amount === 1) {
         needsUpdate = true
-        const durationMs = stake.durationDays * 24 * 60 * 60 * 1000
         return {
           ...stake,
-          startDate: targetDate,
-          endDate: targetDate + durationMs
+          startDate: targetStartDate,
+          endDate: targetEndDate
         }
       }
       return stake
