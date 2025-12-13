@@ -3,10 +3,11 @@ import { StakePosition } from './types'
 export function createStakesData(): StakePosition[] {
   const stakes: StakePosition[] = []
 
-  const stake1StartDate = new Date('2025-06-18T00:00:00')
-  const stake1EndDate = new Date('2025-12-11T00:00:00')
-  const stake1Amount = 1652
+  const now = Date.now()
   const stake1Days = 176
+  const stake1StartDate = now - (stake1Days * 24 * 60 * 60 * 1000)
+  const stake1EndDate = now
+  const stake1Amount = 1652
   const stake1APY = 18.22
   const stake1Rewards = 149
   
@@ -15,8 +16,8 @@ export function createStakesData(): StakePosition[] {
     currency: 'USDT',
     amount: stake1Amount,
     apy: stake1APY,
-    startDate: stake1StartDate.getTime(),
-    endDate: stake1EndDate.getTime(),
+    startDate: stake1StartDate,
+    endDate: stake1EndDate,
     rewards: stake1Rewards,
     durationDays: stake1Days
   })
