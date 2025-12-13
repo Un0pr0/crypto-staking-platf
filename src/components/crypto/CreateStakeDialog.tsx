@@ -19,7 +19,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('USDT')
   const [amount, setAmount] = useState('')
-  const [duration, setDuration] = useState<number>(180)
+  const [duration, setDuration] = useState<number>(60)
   const [loading, setLoading] = useState(false)
   
   const availableHoldings = (holdings || []).filter(h => h.amount > 0 && STAKING_APYS[h.symbol as Cryptocurrency] > 0)
@@ -178,7 +178,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
                 if (val >= 1 && val <= 365) {
                   setDuration(val)
                 } else if (e.target.value === '') {
-                  setDuration(30)
+                  setDuration(60)
                 }
               }}
               placeholder="Enter days (1-365)"
@@ -188,10 +188,10 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => setDuration(30)}
+                onClick={() => setDuration(60)}
                 className="text-xs"
               >
-                30 days
+                60 days
               </Button>
               <Button
                 type="button"

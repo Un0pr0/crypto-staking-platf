@@ -18,7 +18,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
   const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('USDT')
-  const [term, setTerm] = useState<number>(30)
+  const [term, setTerm] = useState<number>(60)
   const [amount, setAmount] = useState('')
   const [loading, setLoading] = useState(false)
   
@@ -159,21 +159,12 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
                 if (val >= 1 && val <= 365) {
                   setTerm(val)
                 } else if (e.target.value === '') {
-                  setTerm(30)
+                  setTerm(60)
                 }
               }}
               placeholder="Enter days (1-365)"
             />
             <div className="flex gap-2 flex-wrap">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setTerm(30)}
-                className="text-xs"
-              >
-                30 days
-              </Button>
               <Button
                 type="button"
                 variant="outline"
