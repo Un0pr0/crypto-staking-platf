@@ -90,7 +90,9 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
       
       await new Promise(resolve => setTimeout(resolve, 100))
       
-      toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
+      toast.success('Your deposit application has been accepted. Please allow 24 hours for activation.', {
+        duration: 5000,
+      })
       
       setAmount('')
       setTerm(60)

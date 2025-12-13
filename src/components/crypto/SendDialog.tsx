@@ -14,7 +14,7 @@ interface SendDialogProps {
 }
 
 export function SendDialog({ open, onOpenChange }: SendDialogProps) {
-  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
+  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('BTC')
   const [amount, setAmount] = useState('')
@@ -48,6 +48,18 @@ export function SendDialog({ open, onOpenChange }: SendDialogProps) {
         address,
         status: 'completed',
       }
+      
+      setHoldings((currentHoldings) => {
+        return (currentHoldings || []).map(holding => {
+          if (holding.symbol === selectedCrypto) {
+            return {
+              ...holding,
+              amount: holding.amount - sendAmount
+            }
+          }
+          return holding
+        })
+      })
       
       setTransactions((current) => [newTransaction, ...(current || [])])
       

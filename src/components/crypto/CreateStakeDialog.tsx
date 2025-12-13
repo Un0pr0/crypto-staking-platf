@@ -95,7 +95,9 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
       
       await new Promise(resolve => setTimeout(resolve, 100))
       
-      toast.success(`Staking started: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
+      toast.success('Your staking application has been accepted. Please allow 24 hours for activation.', {
+        duration: 5000,
+      })
       
       setAmount('')
       setDuration(60)

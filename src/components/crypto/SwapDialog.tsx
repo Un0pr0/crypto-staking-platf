@@ -15,7 +15,7 @@ interface SwapDialogProps {
 }
 
 export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
-  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
+  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [fromCrypto, setFromCrypto] = useState<Cryptocurrency>('BTC')
   const [toCrypto, setToCrypto] = useState<Cryptocurrency>('ETH')
@@ -60,6 +60,24 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
         toAmount: parseFloat(toAmount),
         status: 'completed',
       }
+      
+      setHoldings((currentHoldings) => {
+        return (currentHoldings || []).map(holding => {
+          if (holding.symbol === fromCrypto) {
+            return {
+              ...holding,
+              amount: holding.amount - swapAmount
+            }
+          }
+          if (holding.symbol === toCrypto) {
+            return {
+              ...holding,
+              amount: holding.amount + parseFloat(toAmount)
+            }
+          }
+          return holding
+        })
+      })
       
       setTransactions((current) => [newTransaction, ...(current || [])])
       
