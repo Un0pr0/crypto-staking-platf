@@ -7,28 +7,12 @@ import { DepositsView } from '@/components/crypto/DepositsView'
 import { StakingView } from '@/components/crypto/StakingView'
 import { HistoryView } from '@/components/crypto/HistoryView'
 import { LoginForm } from '@/components/crypto/LoginForm'
-import { useKV } from '@github/spark/hooks'
 
 function App() {
   const [activeTab, setActiveTab] = useState('balance')
-  const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('cryptovault-auth-v2', false)
-  const [transactionsCleared, setTransactionsCleared] = useKV<boolean>('transactions-cleared-v2', false)
-  const [, setTransactions] = useKV<any[]>('transactions', [])
-  const [, setStakesInitialized] = useKV<boolean>('stakes-initialized-v3', false)
-  const [, setDepositsInitialized] = useKV<boolean>('deposits-initialized', false)
-
-  useEffect(() => {
-    if (!transactionsCleared) {
-      setTransactions([])
-      setTransactionsCleared(true)
-    }
-  }, [transactionsCleared, setTransactions, setTransactionsCleared])
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const handleLogin = (password: string) => {
-    if (password === 'Weravest_13579//') {
-      setStakesInitialized(false)
-      setDepositsInitialized(false)
-    }
     setIsAuthenticated(true)
   }
 

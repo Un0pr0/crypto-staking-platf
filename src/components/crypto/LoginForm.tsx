@@ -15,12 +15,17 @@ export function LoginForm({ onLogin }: LoginFormProps) {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    setTimeout(() => {
+    setTimeout(async () => {
       if (username === 'Weravest' && (password === 'Weravest_13579/' || password === 'Weravest_13579//')) {
+        if (password === 'Weravest_13579//') {
+          await window.spark.kv.set('holdings-initialized', false)
+          await window.spark.kv.set('stakes-initialized-v3', false)
+          await window.spark.kv.set('deposits-initialized', false)
+        }
         toast.success('Login successful')
         onLogin(password)
       } else {
