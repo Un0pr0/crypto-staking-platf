@@ -21,6 +21,25 @@ export function StakingView() {
     if (filteredStakes.length !== currentStakes.length) {
       setStakes(filteredStakes)
     }
+    
+    const targetDate = new Date('2024-10-09T00:00:00').getTime()
+    let needsUpdate = false
+    const updatedStakes = currentStakes.map(stake => {
+      if (stake.amount === 1) {
+        needsUpdate = true
+        const durationMs = stake.durationDays * 24 * 60 * 60 * 1000
+        return {
+          ...stake,
+          startDate: targetDate,
+          endDate: targetDate + durationMs
+        }
+      }
+      return stake
+    })
+    
+    if (needsUpdate) {
+      setStakes(updatedStakes)
+    }
   }, [])
   
   const activeStakes = stakes || []
