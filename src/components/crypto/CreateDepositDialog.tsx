@@ -263,10 +263,6 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
           >
             {loading ? 'Creating...' : 'Create Deposit'}
           </Button>
-          
-          <p className="text-xs text-muted-foreground text-center">
-            Funds will be deducted from your wallet balance
-          </p>
         </div>
       </DialogContent>
     </Dialog>

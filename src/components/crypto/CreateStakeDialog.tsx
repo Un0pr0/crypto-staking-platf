@@ -260,15 +260,6 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
           >
             {loading ? 'Creating...' : 'Start Staking'}
           </Button>
-          
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground text-center">
-              Funds will be deducted from your wallet balance
-            </p>
-            <p className="text-xs text-muted-foreground text-center">
-              You can unstake your funds at any time
-            </p>
-          </div>
         </div>
       </DialogContent>
     </Dialog>
