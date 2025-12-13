@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import { DepositPosition, CryptoHolding } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 import { CreateDepositDialog } from './CreateDepositDialog'
 import { DepositDetailDialog } from './DepositDetailDialog'
+import { createDepositsData } from '@/lib/add-deposits'
 
 export function DepositsView() {
   const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
@@ -16,6 +17,15 @@ export function DepositsView() {
   const [createOpen, setCreateOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
+  const [initialized, setInitialized] = useKV<boolean>('deposits-initialized', false)
+
+  useEffect(() => {
+    if (!initialized && (!deposits || deposits.length === 0)) {
+      const newDeposits = createDepositsData()
+      setDeposits(newDeposits)
+      setInitialized(true)
+    }
+  }, [initialized, deposits, setDeposits, setInitialized])
   
   const activeDeposits = (deposits || [])
   const maturedDeposits: DepositPosition[] = []

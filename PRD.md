@@ -41,11 +41,11 @@ This is a portfolio tracking tool with simulated transactions. It manages multip
 - **Success criteria**: Both crypto balances update correctly based on simulated exchange rate
 
 ### Deposits (Депозиты)
-- **Functionality**: Lock cryptocurrency for fixed term to earn simulated interest, with shared wallet balance display
-- **Purpose**: Demonstrates time-locked savings products using funds from shared wallet
+- **Functionality**: Lock cryptocurrency for fixed term to earn simulated interest, with shared wallet balance display and automatic APR calculation based on profit
+- **Purpose**: Demonstrates time-locked savings products using funds from shared wallet with real deposit examples
 - **Trigger**: User clicks "Deposits" tab/button
-- **Progression**: View deposits dashboard (shows total in deposits, interest earned, shared wallet balance) → Create new deposit → Select cryptocurrency → Choose term (30/60/90 days) → See APY and wallet balance → Enter amount → Confirm → Funds deducted from shared wallet → Deposit active → Track maturity date
-- **Success criteria**: Locked funds removed from shared wallet balance (visible across Balance, Deposits, and Staking tabs), maturity date calculated, interest preview shown, wallet balance displayed with clarification it's shared with staking
+- **Progression**: View deposits dashboard (shows total in deposits, interest earned, shared wallet balance) → See pre-loaded demo deposits with automatically calculated APR → Create new deposit → Select cryptocurrency → Choose term (30/60/90 days) → See APY and wallet balance → Enter amount → Confirm → Funds deducted from shared wallet → Deposit active → Track maturity date
+- **Success criteria**: Locked funds removed from shared wallet balance (visible across Balance, Deposits, and Staking tabs), maturity date calculated, interest preview shown, wallet balance displayed with clarification it's shared with staking, APR automatically calculated from profit and duration for demo deposits (Deposit 1: 3760 USDT, May 2 - Dec 12, 2025, 574 profit; Deposit 2: 5035 USDT, July 25, 2025 - Jan 10, 2026, 730 profit; Deposit 3: 1285 USDT, Aug 20, 2025 - Jan 20, 2026, 179 profit)
 
 ### Staking (Стейкинг)
 - **Functionality**: Stake cryptocurrency to earn simulated rewards over time with shared wallet balance tracking
