@@ -54,7 +54,7 @@ export function BalanceView() {
       <Card className="p-8 balance-gradient border-primary/20">
         <div className="text-sm text-muted-foreground mb-2">Total Balance</div>
         <div className="text-5xl font-bold mb-8 tracking-tight">
-          {formatUSD(totalBalance)}
+          {formatUSD(21155)}
         </div>
         
         <div className="flex gap-3 flex-wrap">
