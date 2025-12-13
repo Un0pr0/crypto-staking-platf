@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,37 +10,9 @@ import { CRYPTO_INFO, formatCryptoAmount, formatUSD, calculateStakingRewards } f
 import { CreateStakeDialog } from './CreateStakeDialog'
 
 export function StakingView() {
-  const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
+  const [stakes] = useKV<StakePosition[]>('stakes', [])
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
-  const [createOpen, setCreateOpen] = useState(true)
-  
-  useEffect(() => {
-    const currentStakes = stakes || []
-    const filteredStakes = currentStakes.filter(stake => stake.amount > 1)
-    
-    if (filteredStakes.length !== currentStakes.length) {
-      setStakes(filteredStakes)
-    }
-    
-    const targetStartDate = new Date('2024-10-09T00:00:00').getTime()
-    const targetEndDate = new Date('2026-01-01T00:00:00').getTime()
-    let needsUpdate = false
-    const updatedStakes = currentStakes.map(stake => {
-      if (stake.amount === 1) {
-        needsUpdate = true
-        return {
-          ...stake,
-          startDate: targetStartDate,
-          endDate: targetEndDate
-        }
-      }
-      return stake
-    })
-    
-    if (needsUpdate) {
-      setStakes(updatedStakes)
-    }
-  }, [])
+  const [createOpen, setCreateOpen] = useState(false)
   
   const activeStakes = stakes || []
   

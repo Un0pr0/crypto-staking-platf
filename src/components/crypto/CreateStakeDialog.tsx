@@ -98,11 +98,11 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
       toast.success(`Staking started: ${formatCryptoAmount(stakeAmount)} ${selectedCrypto}`)
       
       setAmount('')
-      onOpenChange(false)
+      setDuration(60)
+      setLoading(false)
     } catch (error) {
       console.error('Error creating stake:', error)
       toast.error('Failed to create stake')
-    } finally {
       setLoading(false)
     }
   }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -17,57 +17,8 @@ export function DepositsView() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
   
-  useEffect(() => {
-    const currentDeposits = deposits || []
-    const filteredDeposits = currentDeposits.filter(deposit => deposit.amount !== 1 && deposit.amount !== 1800)
-    
-    const hasDeposit11AM = filteredDeposits.some(d => d.id === 'deposit-11am')
-    const hasDeposit7_30PM = filteredDeposits.some(d => d.id === 'deposit-7-30pm')
-    
-    const newDeposits = [...filteredDeposits]
-    
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    
-    if (!hasDeposit11AM) {
-      const deposit11AM = new Date(today)
-      deposit11AM.setHours(11, 0, 0, 0)
-      
-      newDeposits.push({
-        id: 'deposit-11am',
-        currency: 'USDT',
-        amount: 1000,
-        apy: 19,
-        startDate: deposit11AM.getTime(),
-        term: 60,
-        maturityDate: deposit11AM.getTime() + 60 * 24 * 60 * 60 * 1000,
-        interest: (1000 * 19 * 60) / (365 * 100)
-      })
-    }
-    
-    if (!hasDeposit7_30PM) {
-      const deposit7_30PM = new Date(today)
-      deposit7_30PM.setHours(19, 30, 0, 0)
-      
-      newDeposits.push({
-        id: 'deposit-7-30pm',
-        currency: 'USDT',
-        amount: 2500,
-        apy: 21,
-        startDate: deposit7_30PM.getTime(),
-        term: 90,
-        maturityDate: deposit7_30PM.getTime() + 90 * 24 * 60 * 60 * 1000,
-        interest: (2500 * 21 * 90) / (365 * 100)
-      })
-    }
-    
-    if (newDeposits.length !== currentDeposits.length || filteredDeposits.length !== currentDeposits.length) {
-      setDeposits(newDeposits)
-    }
-  }, [])
-  
-  const activeDeposits = (deposits || []).filter(d => Date.now() < d.maturityDate)
-  const maturedDeposits = (deposits || []).filter(d => Date.now() >= d.maturityDate)
+  const activeDeposits = (deposits || [])
+  const maturedDeposits: DepositPosition[] = []
   
   const usdtHolding = (holdings || []).find(h => h.symbol === 'USDT')
   const availableUSDT = usdtHolding?.amount || 0

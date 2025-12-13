@@ -93,11 +93,11 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
       toast.success(`Deposit created: ${formatCryptoAmount(depositAmount)} ${selectedCrypto}`)
       
       setAmount('')
-      onOpenChange(false)
+      setTerm(60)
+      setLoading(false)
     } catch (error) {
       console.error('Error creating deposit:', error)
       toast.error('Failed to create deposit')
-    } finally {
       setLoading(false)
     }
   }
