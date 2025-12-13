@@ -2,13 +2,70 @@ import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ClockCounterClockwise, ArrowUp, ArrowDown, ArrowsLeftRight, LockKey, ChartLineUp } from '@phosphor-icons/react'
-import { Transaction } from '@/lib/types'
+import { Transaction, DepositPosition, StakePosition } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount } from '@/lib/crypto-utils'
+import { useMemo } from 'react'
 
 export function HistoryView() {
   const [transactions] = useKV<Transaction[]>('transactions', [])
+  const [deposits] = useKV<DepositPosition[]>('deposits', [])
+  const [stakes] = useKV<StakePosition[]>('stakes', [])
   
-  const sortedTransactions = [...(transactions || [])].sort((a, b) => b.timestamp - a.timestamp)
+  const allTransactions = useMemo(() => {
+    const txList: Transaction[] = [...(transactions || [])]
+    
+    const depositsList = deposits || []
+    for (const deposit of depositsList) {
+      txList.push({
+        id: `deposit-open-${deposit.id}`,
+        type: 'deposit',
+        timestamp: deposit.startDate,
+        amount: deposit.amount,
+        currency: deposit.currency,
+        status: 'completed'
+      })
+      
+      const now = Date.now()
+      if (now >= deposit.maturityDate) {
+        txList.push({
+          id: `deposit-return-${deposit.id}`,
+          type: 'withdraw',
+          timestamp: deposit.maturityDate,
+          amount: deposit.amount + deposit.interest,
+          currency: deposit.currency,
+          status: 'completed'
+        })
+      }
+    }
+    
+    const stakesList = stakes || []
+    for (const stake of stakesList) {
+      txList.push({
+        id: `stake-open-${stake.id}`,
+        type: 'stake',
+        timestamp: stake.startDate,
+        amount: stake.amount,
+        currency: stake.currency,
+        status: 'completed'
+      })
+      
+      const now = Date.now()
+      if (now >= stake.endDate) {
+        txList.push({
+          id: `stake-return-${stake.id}`,
+          type: 'unstake',
+          timestamp: stake.endDate,
+          amount: stake.amount + stake.rewards,
+          currency: stake.currency,
+          status: 'completed'
+        })
+      }
+    }
+    
+    return txList
+  }, [transactions, deposits, stakes])
+  
+  const sortedTransactions = [...allTransactions].sort((a, b) => b.timestamp - a.timestamp)
   
   const getTransactionIcon = (type: Transaction['type']) => {
     switch (type) {

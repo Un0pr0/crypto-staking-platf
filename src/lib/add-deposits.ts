@@ -14,8 +14,8 @@ export function calculateAPRFromProfit(
 export function createDepositsData(): DepositPosition[] {
   const deposits: DepositPosition[] = []
 
-  const deposit1StartDate = new Date('2025-05-02T00:00:00')
-  const deposit1EndDate = new Date('2025-12-12T00:00:00')
+  const deposit1StartDate = new Date('2025-05-02T11:00:00')
+  const deposit1EndDate = new Date('2025-12-12T11:00:00')
   const deposit1Amount = 3760
   const deposit1Profit = 574
   const deposit1APR = calculateAPRFromProfit(
@@ -36,8 +36,8 @@ export function createDepositsData(): DepositPosition[] {
     interest: deposit1Profit
   })
 
-  const deposit2StartDate = new Date('2025-07-25T00:00:00')
-  const deposit2EndDate = new Date('2026-01-10T00:00:00')
+  const deposit2StartDate = new Date('2025-07-25T19:30:00')
+  const deposit2EndDate = new Date('2026-01-10T19:30:00')
   const deposit2Amount = 5035
   const deposit2Profit = 730
   const deposit2APR = calculateAPRFromProfit(
@@ -58,8 +58,8 @@ export function createDepositsData(): DepositPosition[] {
     interest: deposit2Profit
   })
 
-  const deposit3StartDate = new Date('2025-08-20T00:00:00')
-  const deposit3EndDate = new Date('2026-01-20T00:00:00')
+  const deposit3StartDate = new Date('2025-08-20T14:15:00')
+  const deposit3EndDate = new Date('2026-01-20T14:15:00')
   const deposit3Amount = 1285
   const deposit3Profit = 179
   const deposit3APR = calculateAPRFromProfit(
