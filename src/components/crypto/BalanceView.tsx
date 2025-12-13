@@ -22,11 +22,11 @@ export function BalanceView() {
     const initHoldings = async () => {
       if (!initialized) {
         setHoldings([
+          { symbol: 'USDT', name: 'Tether', amount: 1801, priceUSD: CRYPTO_INFO.USDT.priceUSD },
           { symbol: 'BTC', name: 'Bitcoin', amount: 0, priceUSD: CRYPTO_INFO.BTC.priceUSD },
           { symbol: 'ETH', name: 'Ethereum', amount: 0, priceUSD: CRYPTO_INFO.ETH.priceUSD },
           { symbol: 'TRX', name: 'Tron', amount: 0, priceUSD: CRYPTO_INFO.TRX.priceUSD },
-          { symbol: 'TON', name: 'Toncoin', amount: 0, priceUSD: CRYPTO_INFO.TON.priceUSD },
-          { symbol: 'USDT', name: 'Tether', amount: 1801, priceUSD: CRYPTO_INFO.USDT.priceUSD }
+          { symbol: 'TON', name: 'Toncoin', amount: 0, priceUSD: CRYPTO_INFO.TON.priceUSD }
         ])
         setInitialized(true)
       }
