@@ -43,10 +43,6 @@ export function DepositsView() {
     setDetailOpen(true)
   }
   
-  const handleDeleteDeposit = (depositId: string) => {
-    setDeposits((currentDeposits) => (currentDeposits || []).filter(d => d.id !== depositId))
-  }
-  
   const renderDeposit = (deposit: DepositPosition) => {
     const info = CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO]
     const now = Date.now()
@@ -183,7 +179,6 @@ export function DepositsView() {
         deposit={selectedDeposit} 
         open={detailOpen} 
         onOpenChange={setDetailOpen}
-        onDelete={handleDeleteDeposit}
       />
     </div>
   )

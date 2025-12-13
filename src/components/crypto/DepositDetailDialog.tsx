@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { LockKey, CalendarBlank, TrendUp, Coins, Clock, Trash } from '@phosphor-icons/react'
+import { LockKey, CalendarBlank, TrendUp, Coins, Clock } from '@phosphor-icons/react'
 import { DepositPosition } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 
@@ -12,10 +12,9 @@ interface DepositDetailDialogProps {
   deposit: DepositPosition | null
   open: boolean
   onOpenChange: (open: boolean) => void
-  onDelete?: (depositId: string) => void
 }
 
-export function DepositDetailDialog({ deposit, open, onOpenChange, onDelete }: DepositDetailDialogProps) {
+export function DepositDetailDialog({ deposit, open, onOpenChange }: DepositDetailDialogProps) {
   if (!deposit) return null
   
   const info = CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO]
@@ -24,13 +23,6 @@ export function DepositDetailDialog({ deposit, open, onOpenChange, onDelete }: D
   const progress = isMatured ? 100 : ((now - deposit.startDate) / (deposit.maturityDate - deposit.startDate)) * 100
   const daysRemaining = Math.ceil((deposit.maturityDate - now) / (1000 * 60 * 60 * 24))
   const daysElapsed = Math.floor((now - deposit.startDate) / (1000 * 60 * 60 * 24))
-  
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(deposit.id)
-      onOpenChange(false)
-    }
-  }
   
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('en-US', { 
@@ -213,21 +205,6 @@ export function DepositDetailDialog({ deposit, open, onOpenChange, onDelete }: D
               <Button className="w-full gap-2" size="lg">
                 <LockKey />
                 Withdraw {formatCryptoAmount(totalValue)} {deposit.currency}
-              </Button>
-            </>
-          )}
-          
-          {!isMatured && onDelete && (
-            <>
-              <Separator />
-              <Button 
-                variant="destructive" 
-                className="w-full gap-2" 
-                size="lg"
-                onClick={handleDelete}
-              >
-                <Trash />
-                Delete Deposit
               </Button>
             </>
           )}
