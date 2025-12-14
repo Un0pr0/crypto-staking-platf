@@ -58,9 +58,9 @@ export function createStakesData(): StakePosition[] {
   })
 
   const stake4StartDate = new Date('2025-07-10T16:00:00')
-  const stake4EndDate = new Date('2026-01-07T16:00:00')
+  const stake4EndDate = new Date('2025-07-10T16:00:00')
   const stake4Amount = 2785
-  const stake4Days = 181
+  const stake4Days = 0
   const stake4APY = 29.85
   const stake4Rewards = 412
   
