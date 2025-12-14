@@ -58,37 +58,12 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
         interest: calculateDepositInterest(depositAmount, apy, term),
       }
       
-      const newTransaction: Transaction = {
-        id: `transaction-${now}`,
-        type: 'deposit',
-        timestamp: now,
-        amount: depositAmount,
-        currency: selectedCrypto,
-        status: 'completed',
-      }
-      
-      await setHoldings((currentHoldings) => {
-        const updated = (currentHoldings || []).map(holding => {
-          if (holding.symbol === selectedCrypto) {
-            return {
-              ...holding,
-              amount: holding.amount - depositAmount
-            }
-          }
-          return holding
-        })
-        console.log('Holdings updated after deposit:', updated)
-        return updated
-      })
-      
       await setDeposits((current) => {
         const updatedDeposits = [...(current || []), newDeposit]
         console.log('New deposit added:', newDeposit)
         console.log('Total deposits:', updatedDeposits.length)
         return updatedDeposits
       })
-      
-      await setTransactions((current) => [newTransaction, ...(current || [])])
       
       await new Promise(resolve => setTimeout(resolve, 200))
       

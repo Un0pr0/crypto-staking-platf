@@ -63,37 +63,12 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
         durationDays: duration,
       }
       
-      const newTransaction: Transaction = {
-        id: `transaction-${now}`,
-        type: 'stake',
-        timestamp: now,
-        amount: stakeAmount,
-        currency: selectedCrypto,
-        status: 'completed',
-      }
-      
-      await setHoldings((currentHoldings) => {
-        const updated = (currentHoldings || []).map(holding => {
-          if (holding.symbol === selectedCrypto) {
-            return {
-              ...holding,
-              amount: holding.amount - stakeAmount
-            }
-          }
-          return holding
-        })
-        console.log('Holdings updated after stake:', updated)
-        return updated
-      })
-      
       await setStakes((current) => {
         const updatedStakes = [...(current || []), newStake]
         console.log('New stake added:', newStake)
         console.log('Total stakes:', updatedStakes.length)
         return updatedStakes
       })
-      
-      await setTransactions((current) => [newTransaction, ...(current || [])])
       
       await new Promise(resolve => setTimeout(resolve, 200))
       
