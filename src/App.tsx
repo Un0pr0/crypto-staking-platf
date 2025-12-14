@@ -77,12 +77,12 @@ function App() {
       <footer className="border-t border-border mt-12">
         <div className="container mx-auto px-4 py-6 max-w-7xl">
           <p className="text-center text-sm text-muted-foreground">
-            Если возникли какие-то проблемы с нашей платформой, напишите нам на почту{' '}
+            If you encounter any issues with our platform, please contact us at{' '}
             <a 
-              href="mailto:support@dexfistaring.com" 
+              href="mailto:support@dexfistaking.com" 
               className="text-accent hover:underline transition-colors"
             >
-              support@dexfistaring.com
+              support@dexfistaking.com
             </a>
           </p>
         </div>
