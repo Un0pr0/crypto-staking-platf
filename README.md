@@ -1,23 +1,43 @@
-# ✨ Welcome to Your Spark Template!
-You've just launched your brand-new Spark Template Codespace — everything’s fired up and ready for you to explore, build, and create with Spark!
+# Dexfi - Crypto Asset Management Platform
 
-This template is your blank canvas. It comes with a minimal setup to help you get started quickly with Spark development.
+## 🚀 Quick Deploy Guide
 
-🚀 What's Inside?
-- A clean, minimal Spark environment
-- Pre-configured for local development
-- Ready to scale with your ideas
-  
-🧠 What Can You Do?
+### Option 1: Docker (Recommended)
 
-Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
+```bash
+# Build and run
+docker-compose up -d
 
-🧹 Just Exploring?
-No problem! If you were just checking things out and don’t need to keep this code:
+# Application available at http://localhost:3000
+```
 
-- Simply delete your Spark.
-- Everything will be cleaned up — no traces left behind.
+### Option 2: Local Development
 
-📄 License For Spark Template Resources 
+```bash
+# Install dependencies
+npm install
 
-The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## 📋 Login Credentials
+
+- **Username:** Weravest
+- **Main Password:** Weravest_13579/
+- **Static Data Password:** Weravest_13579//
+
+## 🌐 Production Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions including:
+- Docker setup
+- Nginx configuration
+- SSL certificate installation
+- Domain configuration for dexfistaking.com
+
+## 📧 Support
+
+If you encounter any issues with our platform, please contact us at support@dexfistaking.com

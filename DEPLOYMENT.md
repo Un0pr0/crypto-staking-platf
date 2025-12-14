@@ -1,212 +1,201 @@
-# Dexfi Deployment Guide
+# Инструкция по развертыванию Dexfi
 
-This guide explains how to deploy the Dexfi application using Docker on your server at dexfistaking.com.
+## Русский
 
-## Prerequisites
+### Требования
+- Docker и Docker Compose установлены на сервере
+- Доменное имя настроено (dexfistaking.com)
+- Сервер с открытыми портами 80 и 443
 
-- A server with Docker and Docker Compose installed
-- Domain name (dexfistaking.com) pointing to your server's IP address
-- SSH access to your server
+### Быстрый старт
 
-## Deployment Steps
-
-### 1. Install Docker and Docker Compose
-
-If not already installed on your server:
-
+1. **Клонируйте проект на сервер:**
 ```bash
-# Install Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-# Install Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+git clone <ваш-репозиторий> dexfi
+cd dexfi
 ```
 
-### 2. Transfer Files to Server
-
-Upload all project files to your server:
-
+2. **Запустите приложение через Docker:**
 ```bash
-# From your local machine
-scp -r /path/to/spark-template user@your-server-ip:/home/user/dexfi
-```
-
-Or clone from your git repository if you have one:
-
-```bash
-# On your server
-git clone <your-repository-url> /home/user/dexfi
-cd /home/user/dexfi
-```
-
-### 3. Build and Run with Docker Compose
-
-```bash
-cd /home/user/dexfi
-
-# Build and start the container
-docker-compose up -d --build
-
-# Check if the container is running
-docker-compose ps
-
-# View logs
-docker-compose logs -f
-```
-
-### 4. Configure SSL (HTTPS) - Recommended
-
-For production use with HTTPS, use Let's Encrypt with Certbot:
-
-```bash
-# Install Certbot
-sudo apt-get update
-sudo apt-get install certbot python3-certbot-nginx
-
-# Stop the Docker container temporarily
-docker-compose down
-
-# Get SSL certificate
-sudo certbot certonly --standalone -d dexfistaking.com -d www.dexfistaking.com
-
-# Update nginx.conf to include SSL configuration (see SSL Configuration section below)
-
-# Restart the container
 docker-compose up -d
 ```
 
-### 5. SSL Configuration (nginx.conf with HTTPS)
+3. **Приложение будет доступно на порту 3000**
 
-Update the `nginx.conf` file to include SSL:
+### Настройка с доменом
+
+1. **Настройте Nginx (если используете):**
+
+Создайте файл `/etc/nginx/sites-available/dexfistaking.com`:
 
 ```nginx
 server {
     listen 80;
     server_name dexfistaking.com www.dexfistaking.com;
-    return 301 https://$server_name$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name dexfistaking.com www.dexfistaking.com;
-
-    ssl_certificate /etc/letsencrypt/live/dexfistaking.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/dexfistaking.com/privkey.pem;
-
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers HIGH:!aNULL:!MD5;
-
-    root /usr/share/nginx/html;
-    index index.html;
 
     location / {
-        try_files $uri $uri/ /index.html;
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
-
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    gzip on;
-    gzip_vary on;
-    gzip_min_length 1024;
-    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/javascript application/json image/svg+xml;
 }
 ```
 
-Then update `docker-compose.yml` to mount SSL certificates:
-
-```yaml
-version: '3.8'
-
-services:
-  dexfi-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: dexfi-app
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-    environment:
-      - NODE_ENV=production
-    networks:
-      - dexfi-network
-
-networks:
-  dexfi-network:
-    driver: bridge
+2. **Активируйте конфигурацию:**
+```bash
+sudo ln -s /etc/nginx/sites-available/dexfistaking.com /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
-## Useful Commands
-
+3. **Установите SSL сертификат (Let's Encrypt):**
 ```bash
-# Stop the application
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d dexfistaking.com -d www.dexfistaking.com
+```
+
+### Управление приложением
+
+**Остановить:**
+```bash
 docker-compose down
+```
 
-# Restart the application
+**Перезапустить:**
+```bash
 docker-compose restart
+```
 
-# View logs
+**Просмотр логов:**
+```bash
 docker-compose logs -f
-
-# Rebuild and restart
-docker-compose up -d --build
-
-# Remove containers and images
-docker-compose down --rmi all
-
-# Access container shell
-docker exec -it dexfi-app sh
 ```
 
-## Updating the Application
-
-When you make changes to the code:
-
+**Обновить приложение:**
 ```bash
-# Pull latest changes (if using git)
 git pull
-
-# Rebuild and restart
-docker-compose up -d --build
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
 ```
 
-## Troubleshooting
+### Данные для входа
 
-### Container won't start
+- **Логин:** Weravest
+- **Пароль (основной):** Weravest_13579/
+- **Пароль (статические данные):** Weravest_13579//
+
+---
+
+## English
+
+### Requirements
+- Docker and Docker Compose installed on server
+- Domain name configured (dexfistaking.com)
+- Server with open ports 80 and 443
+
+### Quick Start
+
+1. **Clone the project to your server:**
 ```bash
-docker-compose logs dexfi-app
+git clone <your-repository> dexfi
+cd dexfi
 ```
 
-### Port already in use
+2. **Start the application with Docker:**
 ```bash
-# Check what's using port 80
-sudo lsof -i :80
-
-# Stop the service using the port or change the port in docker-compose.yml
+docker-compose up -d
 ```
 
-### Permission issues
+3. **Application will be available on port 3000**
+
+### Domain Setup
+
+1. **Configure Nginx (if using):**
+
+Create file `/etc/nginx/sites-available/dexfistaking.com`:
+
+```nginx
+server {
+    listen 80;
+    server_name dexfistaking.com www.dexfistaking.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+2. **Activate configuration:**
 ```bash
-# Make sure Docker can access the files
-sudo chown -R $USER:$USER /home/user/dexfi
+sudo ln -s /etc/nginx/sites-available/dexfistaking.com /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
-## Security Notes
+3. **Install SSL certificate (Let's Encrypt):**
+```bash
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d dexfistaking.com -d www.dexfistaking.com
+```
 
-1. Always use HTTPS in production
-2. Keep your server and Docker updated
-3. Use a firewall to restrict access to necessary ports only
-4. Regularly backup your data
-5. Monitor your application logs
+### Application Management
 
-## Support
+**Stop:**
+```bash
+docker-compose down
+```
 
-If you encounter issues, contact: support@dexfistaking.com
+**Restart:**
+```bash
+docker-compose restart
+```
+
+**View logs:**
+```bash
+docker-compose logs -f
+```
+
+**Update application:**
+```bash
+git pull
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+### Login Credentials
+
+- **Username:** Weravest
+- **Password (main):** Weravest_13579/
+- **Password (static data):** Weravest_13579//
+
+---
+
+## Troubleshooting / Решение проблем
+
+### Порт уже занят / Port already in use
+Измените порт в `docker-compose.yml` с 3000 на другой (например, 3001):
+```yaml
+ports:
+  - "3001:80"
+```
+
+### Проблемы с правами / Permission issues
+```bash
+sudo chown -R $USER:$USER .
+```
+
+### Приложение не запускается / Application won't start
+```bash
+docker-compose logs
+```
+Проверьте логи для диагностики / Check logs for diagnostics

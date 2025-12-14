@@ -1,20 +1,13 @@
 version: '3.8'
 
 services:
-  dexfi-app:
+  dexfi:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: dexfi-app
     ports:
-      - "80:80"
-      - "443:443"
+      - "3000:80"
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-    networks:
-      - dexfi-network
-
-networks:
-  dexfi-network:
-    driver: bridge
