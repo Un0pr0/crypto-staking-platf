@@ -70,7 +70,6 @@ export function StakingView() {
               Shared Wallet
             </div>
             <div className="text-xl font-semibold text-accent">{formatCryptoAmount(availableUSDT)} USDT</div>
-            <div className="text-[10px] text-muted-foreground/80 mt-0.5 leading-tight">For deposits & staking</div>
           </div>
         </div>
       </Card>

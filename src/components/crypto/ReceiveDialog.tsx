@@ -68,10 +68,6 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
             {copied ? <Check /> : <Copy />}
             {copied ? 'Copied!' : 'Copy Address'}
           </Button>
-          
-          <p className="text-xs text-muted-foreground text-center">
-            This is a demo address. Do not send real funds.
-          </p>
         </div>
       </DialogContent>
     </Dialog>
