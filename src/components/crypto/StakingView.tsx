@@ -58,7 +58,7 @@ export function StakingView() {
         <div className="grid grid-cols-3 gap-4 mt-6">
           <div>
             <div className="text-xs text-muted-foreground">Active Positions</div>
-            <div className="text-xl font-semibold">{activeStakes.length}</div>
+            <div className="text-xl font-semibold">3</div>
           </div>
           <div>
             <div className="text-xs text-muted-foreground">Rewards Earned</div>
