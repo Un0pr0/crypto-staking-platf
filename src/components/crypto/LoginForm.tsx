@@ -43,7 +43,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             <LockKey className="text-primary" size={32} />
           </div>
           <CardTitle className="text-3xl font-bold">Dexfi</CardTitle>
-          <p className="text-muted-foreground">Enter your credentials to access your portfolio</p>
+          <p className="text-muted-foreground">Введите данные для входа в личный кабинет</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
