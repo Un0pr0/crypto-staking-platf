@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+dist
+.DS_Store
+*.log
+.vscode
+.idea
+.devcontainer
+pids
+.spark-*
+README.md
+PRD.md
