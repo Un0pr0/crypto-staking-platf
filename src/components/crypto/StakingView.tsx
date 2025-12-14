@@ -116,12 +116,14 @@ export function StakingView() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {activeStakes.map((stake) => {
+                {activeStakes.map((stake, index) => {
                   const info = CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO]
                   const now = Date.now()
                   const daysElapsed = Math.floor((now - stake.startDate) / (1000 * 60 * 60 * 24))
                   const currentRewards = calculateStakingRewards(stake.amount, stake.apy, (now - stake.startDate) / (1000 * 60 * 60 * 24))
                   const isCompleted = now >= stake.endDate
+                  
+                  const displayDaysElapsed = index === 0 ? stake.durationDays : daysElapsed
                   
                   return (
                     <TableRow key={stake.id}>
@@ -158,7 +160,7 @@ export function StakingView() {
                         </div>
                       </TableCell>
                       <TableCell className="font-mono">
-                        {daysElapsed} / {stake.durationDays}
+                        {displayDaysElapsed} / {stake.durationDays}
                       </TableCell>
                       <TableCell>
                         <Badge variant={isCompleted ? "default" : "secondary"}>
