@@ -198,16 +198,6 @@ export function DepositDetailDialog({ deposit, open, onOpenChange }: DepositDeta
               </div>
             </div>
           </div>
-          
-          {isMatured && (
-            <>
-              <Separator />
-              <Button className="w-full gap-2" size="lg">
-                <LockKey />
-                Withdraw {formatCryptoAmount(totalValue)} {deposit.currency}
-              </Button>
-            </>
-          )}
         </div>
       </DialogContent>
     </Dialog>
