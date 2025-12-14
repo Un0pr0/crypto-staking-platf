@@ -42,7 +42,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
           <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
             <LockKey className="text-primary" size={32} />
           </div>
-          <CardTitle className="text-3xl font-bold">CryptoVault</CardTitle>
+          <CardTitle className="text-3xl font-bold">Dexfi</CardTitle>
           <p className="text-muted-foreground">Enter your credentials to access your portfolio</p>
         </CardHeader>
         <CardContent>
