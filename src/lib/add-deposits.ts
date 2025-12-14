@@ -59,7 +59,7 @@ export function createDepositsData(): DepositPosition[] {
   })
 
   const deposit3StartDate = new Date('2025-08-20T14:15:00')
-  const deposit3EndDate = new Date('2025-08-20T14:15:00')
+  const deposit3EndDate = new Date('2026-01-20T00:00:00')
   const deposit3Amount = 1285
   const deposit3Profit = 179
   const deposit3APR = calculateAPRFromProfit(
@@ -75,7 +75,7 @@ export function createDepositsData(): DepositPosition[] {
     amount: deposit3Amount,
     apy: deposit3APR,
     startDate: deposit3StartDate.getTime(),
-    term: 0,
+    term: Math.floor((deposit3EndDate.getTime() - deposit3StartDate.getTime()) / (1000 * 60 * 60 * 24)),
     maturityDate: deposit3EndDate.getTime(),
     interest: deposit3Profit
   })
