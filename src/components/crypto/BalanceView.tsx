@@ -43,7 +43,9 @@ export function BalanceView() {
     return sum + stake.amount * CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO].priceUSD
   }, 0)
 
-  const depositsBalance = (deposits || []).reduce((sum, deposit) => {
+  const now = Date.now()
+  const activeDeposits = (deposits || []).filter(d => now < d.maturityDate)
+  const depositsBalance = activeDeposits.reduce((sum, deposit) => {
     return sum + deposit.amount * CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO].priceUSD
   }, 0)
 

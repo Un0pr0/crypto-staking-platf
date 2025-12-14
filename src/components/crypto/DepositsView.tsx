@@ -27,8 +27,9 @@ export function DepositsView() {
     }
   }, [initialized, deposits, setDeposits, setInitialized])
   
-  const activeDeposits = (deposits || [])
-  const maturedDeposits: DepositPosition[] = []
+  const now = Date.now()
+  const activeDeposits = (deposits || []).filter(d => now < d.maturityDate)
+  const maturedDeposits = (deposits || []).filter(d => now >= d.maturityDate)
   
   const usdtHolding = (holdings || []).find(h => h.symbol === 'USDT')
   const availableUSDT = usdtHolding?.amount || 0
@@ -124,7 +125,7 @@ export function DepositsView() {
         <div className="grid grid-cols-3 gap-4 mt-6">
           <div>
             <div className="text-xs text-muted-foreground">Active Deposits</div>
-            <div className="text-xl font-semibold">2</div>
+            <div className="text-xl font-semibold">{activeDeposits.length}</div>
           </div>
           <div>
             <div className="text-xs text-muted-foreground">Interest Earned</div>
