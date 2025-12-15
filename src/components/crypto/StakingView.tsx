@@ -14,12 +14,6 @@ export function StakingView() {
   const activeStakes = STATIC_STAKES
   const availableUSDT = AVAILABLE_BALANCE
   
-  console.log('StakingView - activeStakes:', activeStakes)
-  console.log('StakingView - availableUSDT:', availableUSDT)
-  console.log('StakingView - TOTAL_STAKED:', TOTAL_STAKED)
-  console.log('StakingView - TOTAL_REWARDS:', TOTAL_REWARDS)
-  console.log('StakingView - ACTIVE_POSITIONS:', ACTIVE_POSITIONS)
-  
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('en-US', {
       day: '2-digit',

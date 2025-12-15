@@ -18,10 +18,6 @@ export function DepositsView() {
   const deposits = STATIC_DEPOSITS
   const availableUSDT = AVAILABLE_BALANCE
   
-  console.log('DepositsView - deposits:', deposits)
-  console.log('DepositsView - availableUSDT:', availableUSDT)
-  console.log('DepositsView - ACTIVE_DEPOSITS:', ACTIVE_DEPOSITS)
-  
   const activeDeposits = [deposits[1], deposits[2]]
   const maturedDeposits = [deposits[0]]
   

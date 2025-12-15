@@ -14,9 +14,6 @@ export function BalanceView() {
   const [swapOpen, setSwapOpen] = useState(false)
 
   const holdings = STATIC_HOLDINGS
-  
-  console.log('BalanceView - holdings:', holdings)
-  console.log('BalanceView - TOTAL_BALANCE:', TOTAL_BALANCE)
 
   return (
     <div className="space-y-6">

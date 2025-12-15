@@ -4,8 +4,6 @@ import { ClockCounterClockwise, ArrowUp, ArrowDown, ArrowsLeftRight, LockKey, Ch
 import { formatCryptoAmount } from '@/lib/crypto-utils'
 
 export function HistoryView() {
-  console.log('HistoryView - rendering')
-  
   const staticTransactions = [
     {
       id: 'stake-return-1',
