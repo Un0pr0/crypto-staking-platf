@@ -6,6 +6,16 @@ import { formatCryptoAmount } from '@/lib/crypto-utils'
 export function HistoryView() {
   const staticTransactions = [
     {
+      id: 'deposit-open-4',
+      type: 'deposit' as const,
+      timestamp: new Date('2025-12-15T19:16:00').getTime(),
+      amount: 6135,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Deposit',
+      icon: 'deposit'
+    },
+    {
       id: 'stake-return-1',
       type: 'unstake' as const,
       timestamp: new Date('2025-12-11T00:00:00').getTime(),
