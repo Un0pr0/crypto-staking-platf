@@ -85,12 +85,12 @@ export const STATIC_DEPOSITS: DepositPosition[] = [
   {
     id: 'deposit-1765894560000-4',
     currency: 'USDT',
-    amount: 680.7839,
-    apy: 19.00,
+    amount: 6135,
+    apy: 22.52,
     startDate: new Date('2025-12-15T19:16:00').getTime(),
     term: 180,
     maturityDate: new Date('2026-06-13T19:16:00').getTime(),
-    interest: 63.73
+    interest: 680.7839
   }
 ]
 

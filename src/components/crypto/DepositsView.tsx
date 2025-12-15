@@ -21,9 +21,9 @@ export function DepositsView() {
   const activeDeposits = [deposits[1], deposits[2], deposits[3]]
   const maturedDeposits = [deposits[0]]
   
-  const totalDeposited = 7000.7839
+  const totalDeposited = 12455
   
-  const totalInterest = 972.73
+  const totalInterest = 1589.7839
   
   const handleDepositClick = (deposit: DepositPosition) => {
     setSelectedDeposit(deposit)
