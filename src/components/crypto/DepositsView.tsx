@@ -18,12 +18,12 @@ export function DepositsView() {
   const deposits = STATIC_DEPOSITS
   const availableUSDT = AVAILABLE_BALANCE
   
-  const activeDeposits = [deposits[1], deposits[2]]
+  const activeDeposits = [deposits[1], deposits[2], deposits[3]]
   const maturedDeposits = [deposits[0]]
   
-  const totalDeposited = 6320
+  const totalDeposited = 7000.7839
   
-  const totalInterest = 909
+  const totalInterest = 972.73
   
   const handleDepositClick = (deposit: DepositPosition) => {
     setSelectedDeposit(deposit)
@@ -42,6 +42,9 @@ export function DepositsView() {
     } else if (deposit.id === 'deposit-1755820800000-3') {
       progress = 45
       daysRemaining = 42
+    } else if (deposit.id === 'deposit-1765894560000-4') {
+      progress = 0
+      daysRemaining = 180
     }
     
     return (

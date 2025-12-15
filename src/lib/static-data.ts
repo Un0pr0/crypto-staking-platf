@@ -81,6 +81,16 @@ export const STATIC_DEPOSITS: DepositPosition[] = [
     term: 153,
     maturityDate: new Date('2026-01-20T00:00:00').getTime(),
     interest: 179
+  },
+  {
+    id: 'deposit-1765894560000-4',
+    currency: 'USDT',
+    amount: 680.7839,
+    apy: 19.00,
+    startDate: new Date('2025-12-15T19:16:00').getTime(),
+    term: 180,
+    maturityDate: new Date('2026-06-13T19:16:00').getTime(),
+    interest: 63.73
   }
 ]
 
@@ -89,4 +99,4 @@ export const AVAILABLE_BALANCE = 6135
 export const TOTAL_STAKED = 8700
 export const TOTAL_REWARDS = 1287
 export const ACTIVE_POSITIONS = 3
-export const ACTIVE_DEPOSITS = 2
+export const ACTIVE_DEPOSITS = 3
