@@ -1,7 +1,7 @@
 import { CryptoHolding, StakePosition, DepositPosition } from './types'
 
 export const STATIC_HOLDINGS: CryptoHolding[] = [
-  { symbol: 'USDT', name: 'Tether', amount: 6135, priceUSD: 1 },
+  { symbol: 'USDT', name: 'Tether', amount: 0, priceUSD: 1 },
   { symbol: 'BTC', name: 'Bitcoin', amount: 0, priceUSD: 97500 },
   { symbol: 'ETH', name: 'Ethereum', amount: 0, priceUSD: 3650 },
   { symbol: 'TRX', name: 'Tron', amount: 0, priceUSD: 0.25 },
@@ -95,7 +95,7 @@ export const STATIC_DEPOSITS: DepositPosition[] = [
 ]
 
 export const TOTAL_BALANCE = 21155
-export const AVAILABLE_BALANCE = 6135
+export const AVAILABLE_BALANCE = 0
 export const TOTAL_STAKED = 8700
 export const TOTAL_REWARDS = 1287
 export const ACTIVE_POSITIONS = 3

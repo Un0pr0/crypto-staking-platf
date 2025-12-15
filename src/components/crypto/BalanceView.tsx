@@ -53,49 +53,38 @@ export function BalanceView() {
 
       <div>
         <h2 className="text-2xl font-semibold mb-4">Assets</h2>
-        {!holdings || holdings.length === 0 ? (
-          <Card className="p-8 text-center">
-            <p className="text-muted-foreground mb-4">
-              You don't have any assets yet
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Use "Receive" to add balance (demo)
-            </p>
-          </Card>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {holdings.map((holding) => {
-              const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
-              const value = holding.amount * info.priceUSD
-              
-              return (
-                <Card key={holding.symbol} className="p-6 hover:border-primary/40 transition-colors">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div 
-                      className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
-                      style={{ backgroundColor: info.color }}
-                    >
-                      {info.symbol}
-                    </div>
-                    <div>
-                      <div className="font-semibold">{info.name}</div>
-                      <div className="text-sm text-muted-foreground">{holding.symbol}</div>
-                    </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {holdings.map((holding) => {
+            const info = CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO]
+            const value = holding.amount * info.priceUSD
+            
+            return (
+              <Card key={holding.symbol} className="p-6 hover:border-primary/40 transition-colors">
+                <div className="flex items-center gap-3 mb-4">
+                  <div 
+                    className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
+                    style={{ backgroundColor: info.color }}
+                  >
+                    {info.symbol}
                   </div>
-                  
-                  <div className="space-y-1">
-                    <div className="text-2xl font-bold">
-                      {formatCryptoAmount(holding.amount)}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {formatUSD(value)}
-                    </div>
+                  <div>
+                    <div className="font-semibold">{info.name}</div>
+                    <div className="text-sm text-muted-foreground">{holding.symbol}</div>
                   </div>
-                </Card>
-              )
-            })}
-          </div>
-        )}
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="text-2xl font-bold">
+                    {formatCryptoAmount(holding.amount)}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {formatUSD(value)}
+                  </div>
+                </div>
+              </Card>
+            )
+          })}
+        </div>
       </div>
 
       <SendDialog open={sendOpen} onOpenChange={setSendOpen} />
