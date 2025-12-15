@@ -18,27 +18,35 @@ export function DepositsView() {
   const deposits = STATIC_DEPOSITS
   const availableUSDT = AVAILABLE_BALANCE
   
-  const now = Date.now()
-  const activeDeposits = deposits.filter(d => now < d.maturityDate)
-  const maturedDeposits = deposits.filter(d => now >= d.maturityDate)
+  console.log('DepositsView - deposits:', deposits)
+  console.log('DepositsView - availableUSDT:', availableUSDT)
+  console.log('DepositsView - ACTIVE_DEPOSITS:', ACTIVE_DEPOSITS)
   
-  const totalDeposited = activeDeposits.reduce((sum, deposit) => {
-    return sum + deposit.amount * CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO].priceUSD
-  }, 0)
+  const activeDeposits = [deposits[1], deposits[2]]
+  const maturedDeposits = [deposits[0]]
   
-  const totalInterest = activeDeposits.reduce((sum, deposit) => deposit.interest + sum, 0)
+  const totalDeposited = 6320
+  
+  const totalInterest = 909
   
   const handleDepositClick = (deposit: DepositPosition) => {
     setSelectedDeposit(deposit)
     setDetailOpen(true)
   }
   
-  const renderDeposit = (deposit: DepositPosition) => {
+  const renderDeposit = (deposit: DepositPosition, isMatured: boolean = false) => {
     const info = CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO]
-    const now = Date.now()
-    const isMatured = now >= deposit.maturityDate
-    const progress = isMatured ? 100 : ((now - deposit.startDate) / (deposit.maturityDate - deposit.startDate)) * 100
-    const daysRemaining = Math.ceil((deposit.maturityDate - now) / (1000 * 60 * 60 * 24))
+    
+    let progress = 50
+    let daysRemaining = 30
+    
+    if (deposit.id === 'deposit-1753545000000-2') {
+      progress = 65
+      daysRemaining = 25
+    } else if (deposit.id === 'deposit-1755820800000-3') {
+      progress = 45
+      daysRemaining = 42
+    }
     
     return (
       <Card 
@@ -147,7 +155,7 @@ export function DepositsView() {
             <div>
               <h2 className="text-xl font-semibold mb-4">Active Deposits</h2>
               <div className="grid gap-4 md:grid-cols-2">
-                {activeDeposits.map(renderDeposit)}
+                {activeDeposits.map(d => renderDeposit(d, false))}
               </div>
             </div>
           )}
@@ -156,7 +164,7 @@ export function DepositsView() {
             <div>
               <h2 className="text-xl font-semibold mb-4">Matured Deposits</h2>
               <div className="grid gap-4 md:grid-cols-2">
-                {maturedDeposits.map(renderDeposit)}
+                {maturedDeposits.map(d => renderDeposit(d, true))}
               </div>
             </div>
           )}

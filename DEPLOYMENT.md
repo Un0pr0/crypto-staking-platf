@@ -85,8 +85,7 @@ docker-compose up -d
 ### Данные для входа
 
 - **Логин:** Weravest
-- **Пароль (основной):** Weravest_13579/
-- **Пароль (статические данные):** Weravest_13579//
+- **Пароль:** Weravest_13579/
 
 ---
 
@@ -175,8 +174,7 @@ docker-compose up -d
 ### Login Credentials
 
 - **Username:** Weravest
-- **Password (main):** Weravest_13579/
-- **Password (static data):** Weravest_13579//
+- **Password:** Weravest_13579/
 
 ---
 
@@ -199,3 +197,38 @@ sudo chown -R $USER:$USER .
 docker-compose logs
 ```
 Проверьте логи для диагностики / Check logs for diagnostics
+
+### Shared Balance и History не отображаются / Shared Balance and History not displaying
+
+1. **Откройте консоль браузера (F12)** и проверьте наличие ошибок JavaScript
+2. **Проверьте логи сборки:**
+```bash
+docker-compose logs | grep -i error
+```
+3. **Убедитесь, что все файлы скопированы:**
+```bash
+docker exec -it <container-name> ls -la /usr/share/nginx/html
+```
+4. **Очистите кэш браузера** или откройте в режиме инкогнито
+5. **Пересоберите образ без кэша:**
+```bash
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+### Проверка работы компонентов / Component Check
+
+Откройте консоль браузера (F12 → Console) и проверьте следующие сообщения:
+- `BalanceView - holdings: [...]` - должен показывать массив активов
+- `BalanceView - TOTAL_BALANCE: 21155` - общий баланс
+- `DepositsView - deposits: [...]` - массив депозитов
+- `DepositsView - availableUSDT: 6135` - доступный баланс
+- `StakingView - activeStakes: [...]` - активные стейки
+- `HistoryView - rendering` - история загружается
+
+Если эти сообщения не появляются, значит компоненты не загружаются правильно.
+
+### Все данные статические / All data is static
+
+Приложение использует полностью статические данные, определённые в файле `src/lib/static-data.ts`. Все значения захардкожены и не зависят от текущей даты или времени. Если данные не отображаются, проблема в сборке или загрузке JavaScript файлов.

@@ -1,71 +1,108 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ClockCounterClockwise, ArrowUp, ArrowDown, ArrowsLeftRight, LockKey, ChartLineUp } from '@phosphor-icons/react'
-import { Transaction } from '@/lib/types'
-import { CRYPTO_INFO, formatCryptoAmount } from '@/lib/crypto-utils'
-import { useMemo } from 'react'
-import { STATIC_DEPOSITS, STATIC_STAKES } from '@/lib/static-data'
+import { formatCryptoAmount } from '@/lib/crypto-utils'
 
 export function HistoryView() {
-  const deposits = STATIC_DEPOSITS
-  const stakes = STATIC_STAKES
+  console.log('HistoryView - rendering')
   
-  const allTransactions = useMemo(() => {
-    const txList: Transaction[] = []
-    
-    for (const deposit of deposits) {
-      txList.push({
-        id: `deposit-open-${deposit.id}`,
-        type: 'deposit',
-        timestamp: deposit.startDate,
-        amount: deposit.amount,
-        currency: deposit.currency,
-        status: 'completed'
-      })
-      
-      const now = Date.now()
-      if (now >= deposit.maturityDate) {
-        txList.push({
-          id: `deposit-return-${deposit.id}`,
-          type: 'withdraw',
-          timestamp: deposit.maturityDate,
-          amount: deposit.amount + deposit.interest,
-          currency: deposit.currency,
-          status: 'completed'
-        })
-      }
+  const staticTransactions = [
+    {
+      id: 'stake-return-1',
+      type: 'unstake' as const,
+      timestamp: new Date('2025-12-11T00:00:00').getTime(),
+      amount: 1801,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Unstake',
+      icon: 'unstake'
+    },
+    {
+      id: 'stake-open-1',
+      type: 'stake' as const,
+      timestamp: new Date('2025-06-18T10:30:00').getTime(),
+      amount: 1652,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Staking',
+      icon: 'stake'
+    },
+    {
+      id: 'deposit-return-1',
+      type: 'withdraw' as const,
+      timestamp: new Date('2025-12-12T00:00:00').getTime(),
+      amount: 4334,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Withdraw',
+      icon: 'withdraw'
+    },
+    {
+      id: 'deposit-open-1',
+      type: 'deposit' as const,
+      timestamp: new Date('2025-05-02T11:00:00').getTime(),
+      amount: 3760,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Deposit',
+      icon: 'deposit'
+    },
+    {
+      id: 'stake-open-2',
+      type: 'stake' as const,
+      timestamp: new Date('2025-08-02T15:45:00').getTime(),
+      amount: 2565,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Staking',
+      icon: 'stake'
+    },
+    {
+      id: 'deposit-open-2',
+      type: 'deposit' as const,
+      timestamp: new Date('2025-07-25T19:30:00').getTime(),
+      amount: 5035,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Deposit',
+      icon: 'deposit'
+    },
+    {
+      id: 'stake-open-3',
+      type: 'stake' as const,
+      timestamp: new Date('2025-09-26T09:20:00').getTime(),
+      amount: 3350,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Staking',
+      icon: 'stake'
+    },
+    {
+      id: 'deposit-open-3',
+      type: 'deposit' as const,
+      timestamp: new Date('2025-08-20T11:00:00').getTime(),
+      amount: 1285,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Deposit',
+      icon: 'deposit'
+    },
+    {
+      id: 'stake-open-4',
+      type: 'stake' as const,
+      timestamp: new Date('2025-07-10T16:00:00').getTime(),
+      amount: 2785,
+      currency: 'USDT',
+      status: 'completed' as const,
+      label: 'Staking',
+      icon: 'stake'
     }
-    
-    for (const stake of stakes) {
-      txList.push({
-        id: `stake-open-${stake.id}`,
-        type: 'stake',
-        timestamp: stake.startDate,
-        amount: stake.amount,
-        currency: stake.currency,
-        status: 'completed'
-      })
-      
-      const now = Date.now()
-      if (now >= stake.endDate) {
-        txList.push({
-          id: `stake-return-${stake.id}`,
-          type: 'unstake',
-          timestamp: stake.endDate,
-          amount: stake.amount + stake.rewards,
-          currency: stake.currency,
-          status: 'completed'
-        })
-      }
-    }
-    
-    return txList
-  }, [deposits, stakes])
+  ]
   
-  const sortedTransactions = [...allTransactions].sort((a, b) => b.timestamp - a.timestamp)
+  const sortedTransactions = [...staticTransactions].sort((a, b) => b.timestamp - a.timestamp)
   
-  const getTransactionIcon = (type: Transaction['type']) => {
-    switch (type) {
+  const getTransactionIcon = (iconType: string) => {
+    switch (iconType) {
       case 'send':
         return <ArrowUp className="text-destructive" />
       case 'receive':
@@ -80,62 +117,34 @@ export function HistoryView() {
         return <ChartLineUp className="text-muted-foreground" />
       case 'withdraw':
         return <LockKey className="text-muted-foreground" />
-    }
-  }
-  
-  const getTransactionLabel = (type: Transaction['type']) => {
-    switch (type) {
-      case 'send':
-        return 'Sent'
-      case 'receive':
-        return 'Received'
-      case 'swap':
-        return 'Swap'
-      case 'deposit':
-        return 'Deposit'
-      case 'stake':
-        return 'Staking'
-      case 'unstake':
-        return 'Unstake'
-      case 'withdraw':
-        return 'Withdraw'
+      default:
+        return <ArrowDown className="text-success" />
     }
   }
   
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp)
-    const today = new Date()
-    const yesterday = new Date(today)
-    yesterday.setDate(yesterday.getDate() - 1)
-    
-    if (date.toDateString() === today.toDateString()) {
-      return `Today at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return `Yesterday at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`
-    } else {
-      return date.toLocaleDateString('en-US', { 
-        day: 'numeric', 
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    }
+    return date.toLocaleDateString('en-US', { 
+      day: 'numeric', 
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
   
-  const renderTransaction = (tx: Transaction) => {
-    const info = CRYPTO_INFO[tx.currency as keyof typeof CRYPTO_INFO]
-    const isNegative = tx.type === 'send' || tx.type === 'deposit' || tx.type === 'stake'
+  const renderTransaction = (tx: typeof staticTransactions[0]) => {
+    const isNegative = tx.type === 'deposit' || tx.type === 'stake'
     
     return (
       <Card key={tx.id} className="p-4 hover:border-primary/40 transition-colors">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-            {getTransactionIcon(tx.type)}
+            {getTransactionIcon(tx.icon)}
           </div>
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold">{getTransactionLabel(tx.type)}</span>
+              <span className="font-semibold">{tx.label}</span>
               <Badge variant={tx.status === 'completed' ? 'default' : 'secondary'} className="text-xs">
                 {tx.status === 'completed' ? 'Completed' : tx.status === 'pending' ? 'Pending' : 'Failed'}
               </Badge>
@@ -149,16 +158,6 @@ export function HistoryView() {
             <div className={`font-semibold ${isNegative ? 'text-destructive' : 'text-success'}`}>
               {isNegative ? '-' : '+'}{formatCryptoAmount(tx.amount)} {tx.currency}
             </div>
-            {tx.type === 'swap' && tx.toCurrency && tx.toAmount && (
-              <div className="text-sm text-success">
-                +{formatCryptoAmount(tx.toAmount)} {tx.toCurrency}
-              </div>
-            )}
-            {tx.address && (
-              <div className="text-xs text-muted-foreground font-mono truncate max-w-[120px]">
-                {tx.address}
-              </div>
-            )}
           </div>
         </div>
       </Card>

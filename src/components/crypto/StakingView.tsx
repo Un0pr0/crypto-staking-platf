@@ -14,6 +14,12 @@ export function StakingView() {
   const activeStakes = STATIC_STAKES
   const availableUSDT = AVAILABLE_BALANCE
   
+  console.log('StakingView - activeStakes:', activeStakes)
+  console.log('StakingView - availableUSDT:', availableUSDT)
+  console.log('StakingView - TOTAL_STAKED:', TOTAL_STAKED)
+  console.log('StakingView - TOTAL_REWARDS:', TOTAL_REWARDS)
+  console.log('StakingView - ACTIVE_POSITIONS:', ACTIVE_POSITIONS)
+  
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('en-US', {
       day: '2-digit',
@@ -97,59 +103,113 @@ export function StakingView() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {activeStakes.map((stake, index) => {
-                  const info = CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO]
-                  const now = Date.now()
-                  const daysElapsed = Math.floor((now - stake.startDate) / (1000 * 60 * 60 * 24))
-                  const isCompleted = now >= stake.endDate
-                  
-                  const displayDaysElapsed = index === 0 ? stake.durationDays : daysElapsed
-                  
-                  return (
-                    <TableRow key={stake.id}>
-                      <TableCell className="font-medium">
-                        {formatDate(stake.startDate)}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {formatDate(stake.endDate)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div 
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                            style={{ backgroundColor: info.color }}
-                          >
-                            {info.symbol}
-                          </div>
-                          <div>
-                            <div className="font-semibold">
-                              {formatUSD(stake.amount)}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {stake.currency}
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-success font-semibold">
-                          {formatUSD(stake.rewards)}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Expected
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-mono">
-                        {displayDaysElapsed} / {stake.durationDays}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={isCompleted ? "default" : "secondary"}>
-                          {isCompleted ? "Completed" : "Active"}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
+                <TableRow>
+                  <TableCell className="font-medium">06/18/2025</TableCell>
+                  <TableCell className="font-medium">12/11/2025</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                        style={{ backgroundColor: 'oklch(0.65 0.15 145)' }}
+                      >
+                        ₮
+                      </div>
+                      <div>
+                        <div className="font-semibold">$1,652.00</div>
+                        <div className="text-xs text-muted-foreground">USDT</div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-success font-semibold">$149.00</div>
+                    <div className="text-xs text-muted-foreground">Expected</div>
+                  </TableCell>
+                  <TableCell className="font-mono">176 / 176</TableCell>
+                  <TableCell>
+                    <Badge variant="default">Completed</Badge>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow>
+                  <TableCell className="font-medium">08/02/2025</TableCell>
+                  <TableCell className="font-medium">02/25/2026</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                        style={{ backgroundColor: 'oklch(0.65 0.15 145)' }}
+                      >
+                        ₮
+                      </div>
+                      <div>
+                        <div className="font-semibold">$2,565.00</div>
+                        <div className="text-xs text-muted-foreground">USDT</div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-success font-semibold">$379.00</div>
+                    <div className="text-xs text-muted-foreground">Expected</div>
+                  </TableCell>
+                  <TableCell className="font-mono">142 / 207</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">Active</Badge>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow>
+                  <TableCell className="font-medium">09/26/2025</TableCell>
+                  <TableCell className="font-medium">02/26/2026</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                        style={{ backgroundColor: 'oklch(0.65 0.15 145)' }}
+                      >
+                        ₮
+                      </div>
+                      <div>
+                        <div className="font-semibold">$3,350.00</div>
+                        <div className="text-xs text-muted-foreground">USDT</div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-success font-semibold">$496.00</div>
+                    <div className="text-xs text-muted-foreground">Expected</div>
+                  </TableCell>
+                  <TableCell className="font-mono">88 / 153</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">Active</Badge>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow>
+                  <TableCell className="font-medium">07/10/2025</TableCell>
+                  <TableCell className="font-medium">01/07/2026</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                        style={{ backgroundColor: 'oklch(0.65 0.15 145)' }}
+                      >
+                        ₮
+                      </div>
+                      <div>
+                        <div className="font-semibold">$2,785.00</div>
+                        <div className="text-xs text-muted-foreground">USDT</div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-success font-semibold">$412.00</div>
+                    <div className="text-xs text-muted-foreground">Expected</div>
+                  </TableCell>
+                  <TableCell className="font-mono">126 / 181</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">Active</Badge>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </div>
