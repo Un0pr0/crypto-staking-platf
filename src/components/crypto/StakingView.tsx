@@ -17,12 +17,16 @@ export function StakingView() {
   const [initialized, setInitialized] = useKV<boolean>('stakes-initialized-v3', false)
 
   useEffect(() => {
-    if (!initialized) {
-      const newStakes = createStakesData()
-      setStakes(newStakes)
-      setInitialized(true)
+    const initStakes = async () => {
+      if (!initialized && (!stakes || stakes.length === 0)) {
+        const newStakes = createStakesData()
+        setStakes(newStakes)
+        setInitialized(true)
+      }
     }
-  }, [initialized, setStakes, setInitialized])
+    
+    initStakes()
+  }, [initialized, stakes, setStakes, setInitialized])
   
   const activeStakes = stakes || []
   

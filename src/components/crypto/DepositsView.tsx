@@ -20,11 +20,15 @@ export function DepositsView() {
   const [initialized, setInitialized] = useKV<boolean>('deposits-initialized', false)
 
   useEffect(() => {
-    if (!initialized && (!deposits || deposits.length === 0)) {
-      const newDeposits = createDepositsData()
-      setDeposits(newDeposits)
-      setInitialized(true)
+    const initDeposits = async () => {
+      if (!initialized && (!deposits || deposits.length === 0)) {
+        const newDeposits = createDepositsData()
+        setDeposits(newDeposits)
+        setInitialized(true)
+      }
     }
+    
+    initDeposits()
   }, [initialized, deposits, setDeposits, setInitialized])
   
   const now = Date.now()

@@ -65,7 +65,7 @@ export function HistoryView() {
     return txList
   }, [transactions, deposits, stakes])
   
-  const sortedTransactions = [...allTransactions].sort((a, b) => b.timestamp - a.timestamp).slice(3)
+  const sortedTransactions = [...allTransactions].sort((a, b) => b.timestamp - a.timestamp)
   
   const getTransactionIcon = (type: Transaction['type']) => {
     switch (type) {

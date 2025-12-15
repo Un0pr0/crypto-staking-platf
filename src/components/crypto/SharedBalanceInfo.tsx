@@ -11,7 +11,7 @@ interface SharedBalanceInfoProps {
 export function SharedBalanceInfo({ currency = 'USDT', className = '' }: SharedBalanceInfoProps) {
   const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   
-  const holding = (holdings || []).find(h => h.symbol === currency)
+  const holding = (holdings && holdings.length > 0) ? holdings.find(h => h.symbol === currency) : undefined
   const balance = holding?.amount || 0
   
   return (
