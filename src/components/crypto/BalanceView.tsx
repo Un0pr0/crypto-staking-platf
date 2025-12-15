@@ -1,62 +1,26 @@
-import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowUp, ArrowDown, ArrowsLeftRight } from '@phosphor-icons/react'
-import { CryptoHolding, StakePosition, DepositPosition } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 import { SendDialog } from './SendDialog'
 import { ReceiveDialog } from './ReceiveDialog'
 import { SwapDialog } from './SwapDialog'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { STATIC_HOLDINGS, TOTAL_BALANCE } from '@/lib/static-data'
 
 export function BalanceView() {
-  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
-  const [stakes] = useKV<StakePosition[]>('stakes', [])
-  const [deposits] = useKV<DepositPosition[]>('deposits', [])
   const [sendOpen, setSendOpen] = useState(false)
   const [receiveOpen, setReceiveOpen] = useState(false)
   const [swapOpen, setSwapOpen] = useState(false)
-  const [initialized, setInitialized] = useKV<boolean>('holdings-initialized', false)
 
-  useEffect(() => {
-    const initHoldings = async () => {
-      if (!initialized && (!holdings || holdings.length === 0)) {
-        setHoldings([
-          { symbol: 'USDT', name: 'Tether', amount: 6135, priceUSD: CRYPTO_INFO.USDT.priceUSD },
-          { symbol: 'BTC', name: 'Bitcoin', amount: 0, priceUSD: CRYPTO_INFO.BTC.priceUSD },
-          { symbol: 'ETH', name: 'Ethereum', amount: 0, priceUSD: CRYPTO_INFO.ETH.priceUSD },
-          { symbol: 'TRX', name: 'Tron', amount: 0, priceUSD: CRYPTO_INFO.TRX.priceUSD },
-          { symbol: 'TON', name: 'Toncoin', amount: 0, priceUSD: CRYPTO_INFO.TON.priceUSD }
-        ])
-        setInitialized(true)
-      }
-    }
-    
-    initHoldings()
-  }, [initialized, holdings, setHoldings, setInitialized])
-
-  const holdingsBalance = (holdings || []).reduce((sum, holding) => {
-    return sum + holding.amount * CRYPTO_INFO[holding.symbol as keyof typeof CRYPTO_INFO].priceUSD
-  }, 0)
-
-  const stakingBalance = (stakes || []).reduce((sum, stake) => {
-    return sum + stake.amount * CRYPTO_INFO[stake.currency as keyof typeof CRYPTO_INFO].priceUSD
-  }, 0)
-
-  const now = Date.now()
-  const activeDeposits = (deposits || []).filter(d => now < d.maturityDate)
-  const depositsBalance = activeDeposits.reduce((sum, deposit) => {
-    return sum + deposit.amount * CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO].priceUSD
-  }, 0)
-
-  const totalBalance = holdingsBalance + stakingBalance + depositsBalance
+  const holdings = STATIC_HOLDINGS
 
   return (
     <div className="space-y-6">
       <Card className="p-8 balance-gradient border-primary/20">
         <div className="text-sm text-muted-foreground mb-2">Total Balance</div>
         <div className="text-5xl font-bold mb-8 tracking-tight">
-          {formatUSD(21155)}
+          {formatUSD(TOTAL_BALANCE)}
         </div>
         
         <div className="flex gap-3 flex-wrap">

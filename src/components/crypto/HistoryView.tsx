@@ -1,21 +1,19 @@
-import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ClockCounterClockwise, ArrowUp, ArrowDown, ArrowsLeftRight, LockKey, ChartLineUp } from '@phosphor-icons/react'
-import { Transaction, DepositPosition, StakePosition } from '@/lib/types'
+import { Transaction } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount } from '@/lib/crypto-utils'
 import { useMemo } from 'react'
+import { STATIC_DEPOSITS, STATIC_STAKES } from '@/lib/static-data'
 
 export function HistoryView() {
-  const [transactions] = useKV<Transaction[]>('transactions', [])
-  const [deposits] = useKV<DepositPosition[]>('deposits', [])
-  const [stakes] = useKV<StakePosition[]>('stakes', [])
+  const deposits = STATIC_DEPOSITS
+  const stakes = STATIC_STAKES
   
   const allTransactions = useMemo(() => {
-    const txList: Transaction[] = [...(transactions || [])]
+    const txList: Transaction[] = []
     
-    const depositsList = deposits || []
-    for (const deposit of depositsList) {
+    for (const deposit of deposits) {
       txList.push({
         id: `deposit-open-${deposit.id}`,
         type: 'deposit',
@@ -38,8 +36,7 @@ export function HistoryView() {
       }
     }
     
-    const stakesList = stakes || []
-    for (const stake of stakesList) {
+    for (const stake of stakes) {
       txList.push({
         id: `stake-open-${stake.id}`,
         type: 'stake',
@@ -63,7 +60,7 @@ export function HistoryView() {
     }
     
     return txList
-  }, [transactions, deposits, stakes])
+  }, [deposits, stakes])
   
   const sortedTransactions = [...allTransactions].sort((a, b) => b.timestamp - a.timestamp)
   

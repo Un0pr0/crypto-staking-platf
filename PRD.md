@@ -1,14 +1,14 @@
 # Planning Guide
 
-A cryptocurrency portfolio management demo application that simulates staking, deposits, and trading functionality for educational purposes without real blockchain integration.
+A cryptocurrency portfolio management demo application that displays static staking, deposits, and trading information for demonstration purposes. All data is hardcoded and static to ensure consistent display across all environments including Docker deployments.
 
 **Experience Qualities**: 
 1. **Professional** - Clean, trustworthy interface that reflects financial application standards with clear data presentation
 2. **Confident** - Bold visual hierarchy and decisive interactions that make users feel in control of their portfolio
 3. **Modern** - Contemporary crypto-native aesthetic with sleek gradients and sharp typography
 
-**Complexity Level**: Light Application (multiple features with basic state)
-This is a portfolio tracking tool with simulated transactions. It manages multiple feature areas (balance, transfers, swaps, deposits, staking, history) but uses straightforward state management with no external APIs or complex data synchronization.
+**Complexity Level**: Light Application (multiple features with static display data)
+This is a portfolio demonstration tool with static data display. It shows multiple feature areas (balance, deposits, staking, history) with predefined values that remain consistent across sessions and deployments.
 
 ## Essential Features
 

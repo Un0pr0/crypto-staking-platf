@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ArrowsDownUp } from '@phosphor-icons/react'
-import { CryptoHolding, Transaction, Cryptocurrency } from '@/lib/types'
+import { Cryptocurrency } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount } from '@/lib/crypto-utils'
 import { toast } from 'sonner'
+import { STATIC_HOLDINGS } from '@/lib/static-data'
 
 interface SwapDialogProps {
   open: boolean
@@ -15,14 +15,13 @@ interface SwapDialogProps {
 }
 
 export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
-  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
-  const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
-  const [fromCrypto, setFromCrypto] = useState<Cryptocurrency>('BTC')
-  const [toCrypto, setToCrypto] = useState<Cryptocurrency>('ETH')
+  const [fromCrypto, setFromCrypto] = useState<Cryptocurrency>('USDT')
+  const [toCrypto, setToCrypto] = useState<Cryptocurrency>('BTC')
   const [amount, setAmount] = useState('')
   const [loading, setLoading] = useState(false)
   
-  const availableHoldings = (holdings || []).filter(h => h.amount > 0)
+  const holdings = STATIC_HOLDINGS
+  const availableHoldings = holdings.filter(h => h.amount > 0)
   const fromHolding = availableHoldings.find(h => h.symbol === fromCrypto)
   
   const fromPrice = CRYPTO_INFO[fromCrypto].priceUSD
@@ -50,37 +49,6 @@ export function SwapDialog({ open, onOpenChange }: SwapDialogProps) {
     setLoading(true)
     
     setTimeout(() => {
-      const newTransaction: Transaction = {
-        id: Date.now().toString(),
-        type: 'swap',
-        timestamp: Date.now(),
-        amount: swapAmount,
-        currency: fromCrypto,
-        toCurrency: toCrypto,
-        toAmount: parseFloat(toAmount),
-        status: 'completed',
-      }
-      
-      setHoldings((currentHoldings) => {
-        return (currentHoldings || []).map(holding => {
-          if (holding.symbol === fromCrypto) {
-            return {
-              ...holding,
-              amount: holding.amount - swapAmount
-            }
-          }
-          if (holding.symbol === toCrypto) {
-            return {
-              ...holding,
-              amount: holding.amount + parseFloat(toAmount)
-            }
-          }
-          return holding
-        })
-      })
-      
-      setTransactions((current) => [newTransaction, ...(current || [])])
-      
       toast.success(`Swapped ${formatCryptoAmount(swapAmount)} ${fromCrypto} for ${formatCryptoAmount(parseFloat(toAmount))} ${toCrypto}`)
       setLoading(false)
       setAmount('')

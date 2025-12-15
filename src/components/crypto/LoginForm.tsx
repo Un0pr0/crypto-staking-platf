@@ -19,13 +19,8 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     e.preventDefault()
     setIsLoading(true)
 
-    setTimeout(async () => {
+    setTimeout(() => {
       if (username === 'Weravest' && (password === 'Weravest_13579/' || password === 'Weravest_13579//')) {
-        if (password === 'Weravest_13579//') {
-          await window.spark.kv.set('holdings-initialized', false)
-          await window.spark.kv.set('stakes-initialized-v3', false)
-          await window.spark.kv.set('deposits-initialized', false)
-        }
         toast.success('Login successful')
         onLogin(password)
       } else {

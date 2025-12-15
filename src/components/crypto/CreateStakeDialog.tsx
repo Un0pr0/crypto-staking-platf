@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { CryptoHolding, StakePosition, Transaction, Cryptocurrency } from '@/lib/types'
-import { CRYPTO_INFO, STAKING_APYS, formatCryptoAmount, getStakingAPY } from '@/lib/crypto-utils'
+import { Cryptocurrency } from '@/lib/types'
+import { CRYPTO_INFO, formatCryptoAmount, getStakingAPY } from '@/lib/crypto-utils'
 import { toast } from 'sonner'
+import { STATIC_HOLDINGS } from '@/lib/static-data'
 
 interface CreateStakeDialogProps {
   open: boolean
@@ -14,15 +14,13 @@ interface CreateStakeDialogProps {
 }
 
 export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps) {
-  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
-  const [stakes, setStakes] = useKV<StakePosition[]>('stakes', [])
-  const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('USDT')
   const [amount, setAmount] = useState('')
   const [duration, setDuration] = useState<number>(60)
   const [loading, setLoading] = useState(false)
   
-  const availableHoldings = (holdings || []).filter(h => h.amount > 0 && STAKING_APYS[h.symbol as Cryptocurrency] > 0)
+  const holdings = STATIC_HOLDINGS
+  const availableHoldings = holdings.filter(h => h.amount > 0)
   const currentHolding = availableHoldings.find(h => h.symbol === selectedCrypto)
   const numericAmount = parseFloat(amount) || 0
   const apy = getStakingAPY(numericAmount, selectedCrypto)
@@ -47,30 +45,7 @@ export function CreateStakeDialog({ open, onOpenChange }: CreateStakeDialogProps
     setLoading(true)
     
     try {
-      const now = Date.now()
-      const endDate = now + (duration * 24 * 60 * 60 * 1000)
-      
-      const estimatedRewards = (stakeAmount * (apy / 100) * duration) / 365
-      
-      const newStake: StakePosition = {
-        id: `stake-${now}`,
-        currency: selectedCrypto,
-        amount: stakeAmount,
-        apy,
-        startDate: now,
-        endDate,
-        rewards: estimatedRewards,
-        durationDays: duration,
-      }
-      
-      await setStakes((current) => {
-        const updatedStakes = [...(current || []), newStake]
-        console.log('New stake added:', newStake)
-        console.log('Total stakes:', updatedStakes.length)
-        return updatedStakes
-      })
-      
-      await new Promise(resolve => setTimeout(resolve, 200))
+      await new Promise(resolve => setTimeout(resolve, 500))
       
       toast.success('Your staking application has been accepted. Please allow 24 hours for activation.', {
         duration: 5000,

@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { CryptoHolding, DepositPosition, Transaction, Cryptocurrency } from '@/lib/types'
-import { CRYPTO_INFO, DEPOSIT_APYS, formatCryptoAmount, calculateDepositInterest, getDepositAPY } from '@/lib/crypto-utils'
+import { Cryptocurrency } from '@/lib/types'
+import { CRYPTO_INFO, formatCryptoAmount, calculateDepositInterest, getDepositAPY } from '@/lib/crypto-utils'
 import { toast } from 'sonner'
+import { STATIC_HOLDINGS } from '@/lib/static-data'
 
 interface CreateDepositDialogProps {
   open: boolean
@@ -14,15 +14,13 @@ interface CreateDepositDialogProps {
 }
 
 export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogProps) {
-  const [holdings, setHoldings] = useKV<CryptoHolding[]>('holdings', [])
-  const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
-  const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency>('USDT')
   const [term, setTerm] = useState<number>(60)
   const [amount, setAmount] = useState('')
   const [loading, setLoading] = useState(false)
   
-  const availableHoldings = (holdings || []).filter(h => h.amount > 0)
+  const holdings = STATIC_HOLDINGS
+  const availableHoldings = holdings.filter(h => h.amount > 0)
   const currentHolding = availableHoldings.find(h => h.symbol === selectedCrypto)
   
   const numericAmount = parseFloat(amount) || 0
@@ -44,28 +42,7 @@ export function CreateDepositDialog({ open, onOpenChange }: CreateDepositDialogP
     setLoading(true)
     
     try {
-      const now = Date.now()
-      const maturityDate = now + term * 24 * 60 * 60 * 1000
-      
-      const newDeposit: DepositPosition = {
-        id: `deposit-${now}`,
-        currency: selectedCrypto,
-        amount: depositAmount,
-        apy,
-        startDate: now,
-        term,
-        maturityDate,
-        interest: calculateDepositInterest(depositAmount, apy, term),
-      }
-      
-      await setDeposits((current) => {
-        const updatedDeposits = [...(current || []), newDeposit]
-        console.log('New deposit added:', newDeposit)
-        console.log('Total deposits:', updatedDeposits.length)
-        return updatedDeposits
-      })
-      
-      await new Promise(resolve => setTimeout(resolve, 200))
+      await new Promise(resolve => setTimeout(resolve, 500))
       
       toast.success('Your deposit application has been accepted. Please allow 24 hours for activation.', {
         duration: 5000,

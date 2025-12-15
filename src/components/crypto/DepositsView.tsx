@@ -1,42 +1,26 @@
-import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Plus, LockKey, Wallet } from '@phosphor-icons/react'
-import { DepositPosition, CryptoHolding } from '@/lib/types'
+import { DepositPosition } from '@/lib/types'
 import { CRYPTO_INFO, formatCryptoAmount, formatUSD } from '@/lib/crypto-utils'
 import { CreateDepositDialog } from './CreateDepositDialog'
 import { DepositDetailDialog } from './DepositDetailDialog'
-import { createDepositsData } from '@/lib/add-deposits'
+import { STATIC_DEPOSITS, AVAILABLE_BALANCE, ACTIVE_DEPOSITS } from '@/lib/static-data'
 
 export function DepositsView() {
-  const [deposits, setDeposits] = useKV<DepositPosition[]>('deposits', [])
-  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
   const [createOpen, setCreateOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedDeposit, setSelectedDeposit] = useState<DepositPosition | null>(null)
-  const [initialized, setInitialized] = useKV<boolean>('deposits-initialized', false)
 
-  useEffect(() => {
-    const initDeposits = async () => {
-      if (!initialized && (!deposits || deposits.length === 0)) {
-        const newDeposits = createDepositsData()
-        setDeposits(newDeposits)
-        setInitialized(true)
-      }
-    }
-    
-    initDeposits()
-  }, [initialized, deposits, setDeposits, setInitialized])
+  const deposits = STATIC_DEPOSITS
+  const availableUSDT = AVAILABLE_BALANCE
   
   const now = Date.now()
-  const activeDeposits = (deposits || []).filter(d => now < d.maturityDate)
-  const maturedDeposits = (deposits || []).filter(d => now >= d.maturityDate)
-  
-  const usdtHolding = (holdings || []).find(h => h.symbol === 'USDT')
-  const availableUSDT = usdtHolding?.amount || 0
+  const activeDeposits = deposits.filter(d => now < d.maturityDate)
+  const maturedDeposits = deposits.filter(d => now >= d.maturityDate)
   
   const totalDeposited = activeDeposits.reduce((sum, deposit) => {
     return sum + deposit.amount * CRYPTO_INFO[deposit.currency as keyof typeof CRYPTO_INFO].priceUSD
@@ -129,7 +113,7 @@ export function DepositsView() {
         <div className="grid grid-cols-3 gap-4 mt-6">
           <div>
             <div className="text-xs text-muted-foreground">Active Deposits</div>
-            <div className="text-xl font-semibold">{activeDeposits.length}</div>
+            <div className="text-xl font-semibold">{ACTIVE_DEPOSITS}</div>
           </div>
           <div>
             <div className="text-xs text-muted-foreground">Interest Earned</div>

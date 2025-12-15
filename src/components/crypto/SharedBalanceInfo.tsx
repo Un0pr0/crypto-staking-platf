@@ -1,7 +1,7 @@
-import { useKV } from '@github/spark/hooks'
-import { CryptoHolding } from '@/lib/types'
+import { Card } from '@/components/ui/card'
 import { formatCryptoAmount } from '@/lib/crypto-utils'
 import { Wallet } from '@phosphor-icons/react'
+import { AVAILABLE_BALANCE } from '@/lib/static-data'
 
 interface SharedBalanceInfoProps {
   currency?: string
@@ -9,10 +9,7 @@ interface SharedBalanceInfoProps {
 }
 
 export function SharedBalanceInfo({ currency = 'USDT', className = '' }: SharedBalanceInfoProps) {
-  const [holdings] = useKV<CryptoHolding[]>('holdings', [])
-  
-  const holding = (holdings && holdings.length > 0) ? holdings.find(h => h.symbol === currency) : undefined
-  const balance = holding?.amount || 0
+  const balance = AVAILABLE_BALANCE
   
   return (
     <div className={`flex items-center gap-2 ${className}`}>
